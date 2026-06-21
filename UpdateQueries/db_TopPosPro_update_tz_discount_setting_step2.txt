@@ -1,0 +1,188 @@
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.objects 
+           where object_id = OBJECT_ID(N''[dbo].[tmpUpdate_ApplyDSCItem]'') 
+             and type in (N''U'')) begin
+  update a
+  set a.ApplyGeneralDSC = 0
+  from tblAvailableSize a
+
+  update a
+  set a.ApplyGeneralDSC = 1
+  from tblAvailableSize a, tmpUpdate_ApplyDSCItem i
+  where a.ItemID = i.ItemID
+
+end
+'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.objects 
+           where object_id = OBJECT_ID(N''[dbo].[tmpUpdate_DayRateDiscount]'') 
+             and type in (N''U'')) begin
+
+  declare @ItemID smallint, @SizeID tinyint, @MonRate float, @TueRate float, @WedRate float, 
+          @ThuRate float, @FriRate float, @SatRate float, @SunRate float
+
+  declare curs_day_rate cursor for
+    select a.ItemID, a.SizeID, u.MondayRate, u.TuesdayRate, u.WednesdayRate, 
+           u.ThursdayRate, u.FridayRate, u.SaturdayRate, u.SundayRate
+    from tblAvailableSize a, tmpUpdate_DayRateDiscount u
+    where a.ItemID = u.ItemID
+
+    open curs_day_rate
+    fetch next from curs_day_rate into @ItemID, @SizeID, @MonRate, @TueRate, @WedRate, @ThuRate, @FriRate, @SatRate, @SunRate
+    while (@@fetch_status = 0) begin
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 1, 1, 1, 0, 0, 0, 0, @SunRate, 0, 0, 0, 0, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 2, 1, 1, 0, 0, 0, 0, @MonRate, 0, 0, 0, 0, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 3, 1, 1, 0, 0, 0, 0, @TueRate, 0, 0, 0, 0, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 4, 1, 1, 0, 0, 0, 0, @WedRate, 0, 0, 0, 0, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 5, 1, 1, 0, 0, 0, 0, @ThuRate, 0, 0, 0, 0, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 6, 1, 1, 0, 0, 0, 0, @FriRate, 0, 0, 0, 0, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour, 
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 7, 1, 1, 0, 0, 0, 0, @SatRate, 0, 0, 0, 0, 0)
+    
+      fetch next from curs_day_rate into @ItemID, @SizeID, @MonRate, @TueRate, @WedRate, @ThuRate, @FriRate, @SatRate, @SunRate
+    end
+    close curs_day_rate
+  deallocate curs_day_rate
+
+end
+'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.objects 
+           where object_id = OBJECT_ID(N''[dbo].[tmpUpdate_HourRateDiscount]'') 
+             and type in (N''U'')) begin
+
+  declare @ItemID smallint, @SizeID tinyint, @FromHour smallint, @ToHour smallint, @HourRate float
+
+  declare curs_hour_rate cursor for
+    select a.ItemID, a.SizeID, u.FromHour, u.ToHour, u.HourRate
+    from tblAvailableSize a, tmpUpdate_HourRateDiscount u
+    where a.ItemID = u.ItemID
+
+    open curs_hour_rate
+    fetch next from curs_hour_rate into @ItemID, @SizeID, @FromHour, @ToHour, @HourRate
+    while (@@fetch_status = 0) begin
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 1, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 2, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 3, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 4, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 5, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 6, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 7, 0, 0, 0, 1, 1, 0, 0, 0, @FromHour, @ToHour, @HourRate, 0)
+    
+      fetch next from curs_hour_rate into @ItemID, @SizeID, @FromHour, @ToHour, @HourRate
+    end
+    close curs_hour_rate
+  deallocate curs_hour_rate
+
+end
+'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.objects 
+           where object_id = OBJECT_ID(N''[dbo].[tmpUpdate_HourDSC]'') 
+             and type in (N''U'')) begin
+
+  declare @ItemID smallint, @SizeID tinyint, @FromHour smallint, @ToHour smallint, @HourDSCPrice smallmoney
+
+  declare curs_hour_price cursor for
+    select u.ItemID, u.SizeID, u.FromHour, u.ToHour, u.HourDSCPrice
+    from tmpUpdate_HourDSC u
+
+    open curs_hour_price
+    fetch next from curs_hour_price into @ItemID, @SizeID, @FromHour, @ToHour, @HourDSCPrice
+    while (@@fetch_status = 0) begin
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 1, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 2, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 3, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 4, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 5, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 6, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+
+      insert into tblDayHourDiscount (ItemID, SizeID, WeekDayIndex, ApplyDay, ApplyDayRate, ApplyDayPrice, ApplyHour,
+                                      ApplyHourRate, ApplyHourPrice, DayRate, DayPrice, HourFrom, HourTo, HourRate, HourPrice)
+      values (@ItemID, @SizeID, 7, 0, 0, 0, 1, 0, 1, 0, 0, @FromHour, @ToHour, 0, @HourDSCPrice)
+    
+      fetch next from curs_hour_price into @ItemID, @SizeID, @FromHour, @ToHour, @HourDSCPrice
+    end
+    close curs_hour_price
+  deallocate curs_hour_price
+
+end
+'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+drop table tmpUpdate_ApplyDSCItem
+drop table tmpUpdate_DayRateDiscount
+drop table tmpUpdate_HourRateDiscount
+drop table tmpUpdate_HourDSC
+'
+GO

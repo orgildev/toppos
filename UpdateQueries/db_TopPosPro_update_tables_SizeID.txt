@@ -1,0 +1,175 @@
+IF NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblSize' 
+                 and COLUMN_NAME = 'ID'
+                 and DATA_TYPE = 'smallint') or
+   NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblPendingOrders' 
+                 and COLUMN_NAME = 'SizeID'
+                 and DATA_TYPE = 'smallint') BEGIN
+  
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_tblAvailableSize_tblSize]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblAvailableSize]'))
+ALTER TABLE [dbo].[tblAvailableSize] DROP CONSTRAINT [FK_tblAvailableSize_tblSize]
+
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_tblDayHourDiscount_tblSize]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblDayHourDiscount]'))
+ALTER TABLE [dbo].[tblDayHourDiscount] DROP CONSTRAINT [FK_tblDayHourDiscount_tblSize]
+
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_tblDeletedItems_tblSize]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblDeletedItems]'))
+ALTER TABLE [dbo].[tblDeletedItems] DROP CONSTRAINT [FK_tblDeletedItems_tblSize]
+
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_tblInventoryChangeHistory_tblSize]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblInventoryChangeHistory]'))
+ALTER TABLE [dbo].[tblInventoryChangeHistory] DROP CONSTRAINT [FK_tblInventoryChangeHistory_tblSize]
+
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_tblSalesDetail_tblSize]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblSalesDetail]'))
+ALTER TABLE [dbo].[tblSalesDetail] DROP CONSTRAINT [FK_tblSalesDetail_tblSize]
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[tblAvailableSize]') AND name = N'PK_tblAvailableItem')
+ALTER TABLE [dbo].[tblAvailableSize] DROP CONSTRAINT [PK_tblAvailableItem]
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[tblDayHourDiscount]') AND name = N'PK_tblDayHourDiscount')
+ALTER TABLE [dbo].[tblDayHourDiscount] DROP CONSTRAINT [PK_tblDayHourDiscount]
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[tblInventoryChangeHistory]') AND name = N'PK_tblInventoryChangeHistory')
+ALTER TABLE [dbo].[tblInventoryChangeHistory] DROP CONSTRAINT [PK_tblInventoryChangeHistory]
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[tblSize]') AND name = N'PK_tblSize')
+ALTER TABLE [dbo].[tblSize] DROP CONSTRAINT [PK_tblSize]
+
+
+
+ALTER TABLE [dbo].[tblSize] DROP CONSTRAINT [DF_tblSize_DisplayOrder]
+
+
+ALTER TABLE [dbo].[tblSize] DROP CONSTRAINT [DF_tblSize_SizeGroupID]
+
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[tblSalesDetail]') AND name = N'idx_Item')
+DROP INDEX [idx_Item] ON [dbo].[tblSalesDetail] WITH ( ONLINE = OFF )
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[tblSalesDetail]') AND name = N'idx_SalesDetail')
+DROP INDEX [idx_SalesDetail] ON [dbo].[tblSalesDetail] WITH ( ONLINE = OFF )
+
+
+
+ALTER TABLE [dbo].[tblSize] ALTER COLUMN [ID] smallint
+
+ALTER TABLE [dbo].[tblAvailableSize] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblDayHourDiscount] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblDeletedItems] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblSalesDetail] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblCheckedOrders] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblKitchenOrders] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblPendingOrders] ALTER COLUMN [SizeID] smallint NOT NULL
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] ALTER COLUMN [SizeID] smallint NOT NULL
+
+
+
+CREATE NONCLUSTERED INDEX [idx_Item] ON [dbo].[tblSalesDetail] 
+(
+	[ItemID] ASC,
+	[SizeID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
+CREATE NONCLUSTERED INDEX [idx_SalesDetail] ON [dbo].[tblSalesDetail] 
+(
+	[SalesID] ASC,
+	[ItemID] ASC,
+	[SizeID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
+
+ALTER TABLE [dbo].[tblSize] ADD  CONSTRAINT [DF_tblSize_DisplayOrder]  DEFAULT ((0)) FOR [DisplayOrder]
+
+
+ALTER TABLE [dbo].[tblSize] ADD  CONSTRAINT [DF_tblSize_SizeGroupID]  DEFAULT ((0)) FOR [SizeGroupID]
+
+
+
+ALTER TABLE [dbo].[tblSize] ADD  CONSTRAINT [PK_tblSize] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[tblAvailableSize] ADD  CONSTRAINT [PK_tblAvailableItem] PRIMARY KEY CLUSTERED 
+(
+	[ItemID] ASC,
+	[SizeID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[tblDayHourDiscount] ADD  CONSTRAINT [PK_tblDayHourDiscount] PRIMARY KEY CLUSTERED 
+(
+	[ItemID] ASC,
+	[SizeID] ASC,
+	[WeekDayIndex] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory] ADD  CONSTRAINT [PK_tblInventoryChangeHistory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
+
+ALTER TABLE [dbo].[tblAvailableSize]  WITH CHECK ADD  CONSTRAINT [FK_tblAvailableSize_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+
+
+ALTER TABLE [dbo].[tblAvailableSize] CHECK CONSTRAINT [FK_tblAvailableSize_tblSize]
+
+
+ALTER TABLE [dbo].[tblDayHourDiscount]  WITH CHECK ADD  CONSTRAINT [FK_tblDayHourDiscount_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+
+
+ALTER TABLE [dbo].[tblDayHourDiscount] CHECK CONSTRAINT [FK_tblDayHourDiscount_tblSize]
+
+
+ALTER TABLE [dbo].[tblDeletedItems]  WITH CHECK ADD  CONSTRAINT [FK_tblDeletedItems_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+
+
+ALTER TABLE [dbo].[tblDeletedItems] CHECK CONSTRAINT [FK_tblDeletedItems_tblSize]
+
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblInventoryChangeHistory_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory] CHECK CONSTRAINT [FK_tblInventoryChangeHistory_tblSize]
+
+
+ALTER TABLE [dbo].[tblSalesDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblSalesDetail_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+
+
+ALTER TABLE [dbo].[tblSalesDetail] CHECK CONSTRAINT [FK_tblSalesDetail_tblSize]
+
+
+
+END
+GO

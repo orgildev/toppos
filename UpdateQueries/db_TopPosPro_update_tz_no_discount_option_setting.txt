@@ -1,0 +1,58 @@
+IF NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblAvailableSize' 
+                 and COLUMN_NAME = 'ApplyNoDSC'
+                 and DATA_TYPE = 'bit') BEGIN
+
+  ALTER TABLE [dbo].[tblAvailableSize] ADD [ApplyNoDSC] [bit] NOT NULL CONSTRAINT [DF_tblAvailableSize_ApplyNoDSC]  DEFAULT ((0))
+
+  exec sp_rename
+    @objname = 'tblPendingOrders.ApplyGeneralDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+
+  exec sp_rename
+    @objname = 'tblPendingOrdersBackup.ApplyGeneralDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+
+  exec sp_rename
+    @objname = 'tblPendingOrdersTemp.ApplyGeneralDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+
+END
+GO
+
+IF EXISTS (select *
+           from INFORMATION_SCHEMA.COLUMNS IC 
+           where TABLE_NAME = 'tblAvailableSize' 
+             and COLUMN_NAME = 'ApplyGeneralDSC'
+             and DATA_TYPE = 'bit') and
+   EXISTS (select *
+           from INFORMATION_SCHEMA.COLUMNS IC 
+           where TABLE_NAME = 'tblAvailableSize' 
+             and COLUMN_NAME = 'ApplyNoDSC'
+             and DATA_TYPE = 'bit') BEGIN
+
+  update a
+  set a.ApplyNoDSC = 1
+  from tblAvailableSize a
+  where a.ApplyGeneralDSC = 0
+    and exists (select *
+                from tblDayHourDiscount d
+                where d.ItemID = a.ItemID
+                  and d.SizeID = a.SizeID)
+    and not exists (select *
+                    from tblDayHourDiscount d2
+                    where d2.ItemID = a.ItemID
+                      and d2.SizeID = a.SizeID
+                      and (d2.ApplyDay = 1
+                           or
+                           d2.ApplyHour = 1))
+
+  ALTER TABLE [dbo].[tblAvailableSize] DROP CONSTRAINT [DF_tblAvailableSize_ApplyGeneralDSC]
+  ALTER TABLE [dbo].[tblAvailableSize] DROP COLUMN [ApplyGeneralDSC]
+
+END
+GO

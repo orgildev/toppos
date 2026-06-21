@@ -1,0 +1,571 @@
+Level	TabIndex	ControlIndex	ItemID	OpenItem	SideDish	Taste	ItemName	Caption	AlignTop	AlignLeft	Height	Width	FontName	FontSize	FontBold	FontItalic	FontColor	Color	ImageFileName	ScaleItem	TasteModifier	NextItemID	NextItemName	GroupItem	ItemImage	ItemImageFileType	SoldOut	LayoutModeType
+0	0	0	0	0	0	0		Appetizers	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	1	0	0	0	0	0		Tempura/Noodle	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	2	0	0	0	0	0		Teriyaki/SP/Don	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	3	0	0	0	0	0		Classic/Vegie R	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	4	0	0	0	0	0		Sig Roll	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	5	0	0	0	0	0		Nigiri/Aburi	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	6	0	0	0	0	0		Sashimi	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	7	0	0	0	0	0		Combo/Lunch	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	8	0	0	0	0	0		Drink/Dessert	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	9	0	0	0	0	0		Liquor	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+0	10	0	0	0	0	0		SS Korean	0	0	0	0	Arial	11	1	0	8388608	-16777201		0	0	0		0			0	1
+1	0	1	0	0	0	0		New
+(Not linked!)	115	505	90	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	0	2	11	0	0	0	Shrimp Sunomono	Shrimp
+Sunomono	115	215	90	210	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	0	3	12	0	0	0	Octopus Sunomono	Octopus
+Sunomono	115	425	90	210	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	0	4	166	0	0	0	Spicy Agedashi Tofu	Spicy Agedashi
+Tofu	295	133	90	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	0	5	26	0	0	0	Ebi Mayo	Ebi Mayo	385	508	90	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	0	6	17	0	0	0	Rice	Rice	205	508	90	125	Arial	12	1	0	-16777208	-16777201		0	0	0		0			0	1
+1	0	7	16	0	0	0	Miso	Miso	205	383	90	125	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	0	8	21	0	0	0	Pork Gyoza	Pork
+Gyoza	295	508	90	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	0	9	25	0	0	0	Chicken Yakitori	Chicken Yakitori	385	383	90	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	0	10	9	0	0	0	Chicken Karage Salad	Chicken Karage Salad	25	475	90	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	0	11	0	0	0	0		Apprizers	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	0	12	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	0	13	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	14	8	0	0	0	Tofu Salad	Tofu
+Salad	25	320	90	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	15	7	0	0	0	Avocado Salad	Avocado
+Salad	25	165	90	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	16	15	0	0	0	Wakame	Wakame	205	258	90	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	17	20	0	0	0	Veggie Gyoza	Veggie
+Gyoza	295	383	90	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	18	23	0	0	0	Chicken Karage(R)	Chicken Karage	385	133	90	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	0	19	24	0	0	0	Spicy Chicken Karage	Spicy
+Chicken
+Karage	385	258	90	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	0	20	14	0	0	0	Gomae	Gomae	205	133	90	125	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	0	21	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	22	10	0	0	0	Veggie Sunomono	Veggie
+Sunomono	115	5	90	210	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	0	23	13	0	0	0	Edamame	Edamame	205	8	90	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	24	18	0	0	0	Agedashi Tofu	Agedashi
+Tofu	295	8	90	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	25	22	0	0	0	Takoyaki	Takoyaki	385	8	90	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	0	26	6	0	0	0	House Green Salad	House Green Salad	25	10	90	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	27	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	0	28	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	0	29	19	0	0	0	Veggie Spring R	Spring R	295	258	90	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	1	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	1	2	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	3	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	4	43	0	0	0	Chicken Yaki Udon	Chicken
+Yaki Udon	295	165	70	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	1	5	47	0	0	0	Chicken Yaki Soba	Chicken
+Yaki Soba	395	165	70	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	1	6	41	0	0	0	Seafood Udon	Seafood
+Udon	194	507	70	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	1	7	45	0	0	0	Seafood Yaki Udon	Seafood
+Yaki Udon	295	475	70	155	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	1	8	49	0	0	0	Seafood Yaki Soba	Seafood
+Yaki Soba	395	475	70	155	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	1	9	40	0	0	0	Beef Udon	Beef
+Udon	194	382	70	125	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	1	10	44	0	0	0	Beef Yaki Udon	Beef
+Yaki Udon	295	320	70	155	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	1	11	48	0	0	0	Beef Yaki Soba	Beef
+Yaki Soba	395	320	70	155	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	1	12	38	0	0	0	Tempura Udon	Tempura
+Udon	194	132	70	125	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	1	13	37	0	0	0	Veggie Udon	Veggie
+Udon	194	7	70	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	14	42	0	0	0	Veggie Yaki Udon	Veggie
+Yaki Udon	295	10	70	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	15	46	0	0	0	Veggie Yaki Soba	Veggie
+Yaki Soba	395	10	70	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	16	0	0	0	0		Yaki Udon	270	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	1	17	0	0	0	0		Yaki Soba	370	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	1	18	0	0	0	0		Tempura	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	1	19	162	0	0	1	Spicy	Spicy	468	425	40	105	Arial	12	1	0	16777215	255		0	0	0		0			0	1
+1	1	20	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	1	21	39	0	0	0	Chicken Udon	Chicken
+Udon	194	257	70	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	1	22	27	0	0	0	Appetizer Tempura	Appetizer Tempura	25	7	70	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	1	23	32	0	0	0	Prawn Tempura(8p)	Prawn Tempura
+(8p)	25	257	70	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	1	24	33	0	0	0	Yam Tempura(8p)	Yam
+Tempura
+(8p)	25	507	70	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	25	36	0	0	0	Assorted Tempura	Assorted Tempura	95	7	70	125	Arial	12	1	0	-16777208	13276051		0	0	0		0			0	1
+1	1	26	34	0	0	0	Prawn&Yam Tem(8p)	Prawn&&Yam
+Tempura
+(8p)	95	257	70	125	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	1	27	35	0	0	0	Veggie Tempura(10p)	Veggie
+Tempura
+(10p)	95	507	70	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	28	0	0	0	0		Udon Soup	170	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	1	29	163	0	0	1	Add Deep Fried Tofu	Add Deep Fried Tofu	468	530	40	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	1	30	28	0	0	0	Prawn Tempura(Half)	Prawn Tempura
+(Half)	25	132	70	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	1	31	30	0	0	0	Prawn&Yam Tem(Half)	Prawn&&Yam
+Tempura
+(Half)	95	132	70	125	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	1	32	29	0	0	0	Yam Tempura(Half)	Yam
+Tempura
+(Half)	25	382	70	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	33	31	0	0	0	Veggie Tempura(Half)	Veggie
+Tempura
+(Half)	95	382	70	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	1	34	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	1	4	0	0	1	No Option	No
+Option	509	110	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	2	1	1	0	0	Open Food	Open
+Food	509	215	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	3	3	0	0	1	ToGo	ToGo	509	425	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	4	2	1	0	0	Sub Charge	Sub
+Charge	509	320	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	5	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	6	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	7	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	8	0	0	0	0		Teriyaki	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	2	9	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	2	10	63	0	0	0	Spicy Salmon Don	Spicy
+Salmon
+Don	315	134	70	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	11	223	0	0	0	Spicy Tuna Don	Spicy
+Tuna
+Don	385	134	70	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	12	224	0	0	0	Seared Tuna Don	Seared
+Tuna
+Don	385	384	70	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	2	13	50	0	0	0	Tofu Teriyaki	Tofu
+Teriyaki	25	5	80	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	14	51	0	0	0	Chicken Teriyaki	Chicken
+Teriyaki	25	160	80	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	2	15	52	0	0	0	Beef Teriyaki	Beef
+Teriyaki	25	315	80	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	2	16	53	0	0	0	Salmon Teriyaki	Salmon
+Teriyaki	25	470	80	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	2	17	0	0	0	0		Special	110	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	2	18	0	0	0	0		Donburi	220	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	2	19	65	0	0	0	Seard Salmon Don	Seard
+Salmon
+Don	315	384	70	125	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	2	20	62	0	0	0	Salmon Don	Salmon
+Don	315	9	70	125	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	2	21	222	0	0	0	Tuna Don	Tuna
+Don	385	9	70	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	2	22	64	0	0	0	Chirashi Donburi	Chirashi Donburi	315	259	70	125	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	2	23	58	0	0	0	Chicken Donburi	Chicken Donburi	245	134	70	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	2	24	59	0	0	0	Beef Donburi	Beef
+Donburi	245	259	70	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	2	25	60	0	0	0	Tempura Donburi	Tempura Donburi	245	384	70	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	2	26	61	0	0	0	Unagi Donburi	Unagi
+Donburi	245	509	70	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	2	27	57	0	0	0	Tofu Donburi	Tofu
+Donburi	245	9	70	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	28	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	2	29	237	0	0	1	SPICY	SPICY	469	488	40	105	Arial	12	1	0	16777215	255		0	0	0		0			0	1
+1	2	30	54	0	0	0	Bibimbap	Bibimbap	136	6	77	126	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	31	55	0	0	0	Stone Bowl Bibimbap	Stone Bowl
+Bibimbap	136	131	80	126	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	32	56	0	0	0	BBQ Beef Short Rib	BBQ
+Beef Short Rib	136	258	80	128	Arial	12	1	0	-16777208	13144465		0	0	0		0			0	1
+1	2	33	231	0	0	0	Sundubu	Sundubu	136	387	80	126	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	2	34	236	0	0	0	Beef Soup	Beef Soup	136	514	80	126	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	3	1	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	2	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	3	3	0	0	0	0		Vegetarian Roll	240	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	3	4	78	0	0	0	Chicken R	Chicken
+R	165	5	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	5	79	0	0	0	Beef R	Beef
+R	165	110	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	6	80	0	0	0	BC R	BC
+R	165	215	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	7	81	0	0	0	Unagi R	Unagi
+R	165	320	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	8	83	0	0	0	Alaska R	Alaska
+R	165	530	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	9	88	0	0	0	Avocado R	Avocado
+R	265	425	70	105	Arial	12	1	0	-16777208	65280		0	0	0		0			0	1
+1	3	10	89	0	0	0	Avo&Cucumber R	Avo&&
+Cucumber
+R	265	530	70	105	Arial	12	1	0	-16777208	65280		0	0	0		0			0	1
+1	3	11	90	0	0	0	Shitake R	Shitake
+R	335	5	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	12	91	0	0	0	Red Beet R	Red
+Beet
+R	335	110	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	13	92	0	0	0	Yam R	Yam
+R	335	215	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	14	93	0	0	0	Yam&Avo R	Yam&&Avo R	335	320	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	15	94	0	0	0	Veggie R	Veggie
+R	335	425	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	16	164	0	0	1	Cone	Cone	468	425	40	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	3	17	72	0	0	0	Spicy Tuna R	Spicy
+Tuna
+R	95	5	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	3	18	73	0	0	0	Spicy Salmon R	Spicy
+Salmon
+R	95	110	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	3	19	77	0	0	0	Spicy Scallop R	Spicy Scallop
+R	95	530	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	3	20	87	0	0	0	Osinko Maki	Osinko Maki	265	320	70	105	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	3	21	86	0	0	0	Inari Maki	Inari
+Maki	265	215	70	105	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	3	22	85	0	0	0	Gomae Maki	Gomae Maki	265	110	70	105	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	3	23	84	0	0	0	Kappa Maki	Kappa
+Maki	265	5	70	105	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	3	24	74	0	0	0	California R	California
+R	95	215	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	25	75	0	0	0	Dynamite R	Dynamite
+R	95	320	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	26	76	0	0	0	Chop Scallop R	Chop Scallop
+R	95	425	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	27	68	0	0	0	Tamago Maki	Tamago Maki	25	215	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	3	28	67	0	0	0	Salmon Maki	Salmon Maki	25	110	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	3	29	66	0	0	0	Tuna Maki	Tuna
+Maki	25	5	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	3	30	70	0	0	0	Salmon&Avo R	Salmon&&
+Avo
+R	25	425	70	105	Arial	12	1	0	-16777208	4259584		0	0	0		0			0	1
+1	3	31	71	0	0	0	Tuna&Avo R	Tuna&&
+Avo
+R	25	530	70	105	Arial	12	1	0	-16777208	4259584		0	0	0		0			0	1
+1	3	32	0	0	0	0		Classic Roll	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	3	33	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	34	82	0	0	0	Philadelphia R	Philadelphia R	165	425	70	105	Arial	11	1	0	-16777208	8454143		0	0	0		0			0	1
+1	3	35	233	0	0	0	Avo on Top	Avo on Top	470	307	37	117	Arial	12	1	0	-16777208	4259584		0	0	0		0			0	1
+1	3	36	165	0	0	1	Sockeye Salmon	Sockeye Salmon	468	530	40	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	3	37	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	38	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	3	39	283	0	0	1	Extra Ginger	Extra Ginger	420	115	37	100	Arial	12	1	0	-16777208	8388863		0	0	0		0			0	1
+1	3	40	284	0	0	1	Extra Wasabi	Extra Wasabi	422	10	37	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	3	41	69	0	0	0	Negitoro Maki	Negitoro Maki	25	320	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	3	42	4	0	0	1	No Ginger	No
+Ginger	461	116	46	100	Arial	12	1	0	255	16777215		0	0	11		0			0	1
+1	3	43	4	0	0	1	No Wasabi	No
+Wasabi	463	11	45	100	Arial	12	1	0	255	16777215		0	0	20		0			0	1
+1	3	44	5	0	0	1	Side of Spicy Mayo	Side of Spicy Mayo	421	219	36	206	Arial	12	1	0	-16777208	8421631		0	0	24		0			0	1
+1	4	1	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	4	2	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	3	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	4	4	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	4	5	95	0	0	0	Crispy Crunch R	Crispy
+Crunch
+R	25	10	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	4	6	96	0	0	0	Crazy Boy R	Crazy
+Boy
+R	25	135	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	7	98	0	0	0	Hama R	Hama
+R	25	385	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	4	8	99	0	0	0	Spider R	Spider
+R	25	510	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	4	9	100	0	0	0	Awesome R	Awesome
+R	105	10	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	10	101	0	0	0	Lady Mango R	Lady Mango
+R	105	135	80	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	4	11	102	0	0	0	Rainbow R	Rainbow
+R	105	260	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	4	12	103	0	0	0	Red R	Red
+R	105	385	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	13	104	0	0	0	Kelowna R	Kelowna
+R	105	510	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	14	97	0	0	0	Crazy Girl R	Crazy
+Girl
+R	25	260	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	15	106	0	0	0	Okanagan R	Okanagan
+R	185	135	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	16	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	4	17	0	0	0	0		Signature Roll	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	4	18	107	0	0	0	Gangster R	Gangster
+R	185	260	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	19	234	0	0	0	Salmon Tempura Roll	Salmon Tempura Roll	186	386	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	4	20	235	0	0	0	Tuna Tataki Roll	Tuna Tataki Roll	187	512	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	4	21	105	0	0	0	Magma R	Magma
+R	185	10	80	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	4	22	281	0	0	0	Dragon R	Dragon R	266	11	80	125	Arial	12	1	0	-16777208	33023		0	0	0		0			0	1
+1	5	1	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	2	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	5	3	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	5	4	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	5	0	0	0	0		Sashimi	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	5	6	0	0	0	0		Aburi Nigiri	310	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	5	7	132	0	0	0	pc Aburi Sockeye	Aburi Sockeye	335	220	70	105	Arial	12	1	0	-16777208	13210258		0	0	0		0			0	1
+1	5	8	134	0	0	0	pc Aburi Salmon Toro	Aburi Salmon Toro	335	430	70	105	Arial	12	1	0	-16777208	13210258		0	0	0		0			0	1
+1	5	9	133	0	0	0	pc Aburi Toro	Aburi
+Toro	335	325	70	105	Arial	12	1	0	-16777208	13210258		0	0	0		0			0	1
+1	5	10	108	0	0	0	pc Inari	Inari	25	10	70	105	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	5	11	109	0	0	0	pc Shitake	Shitake	25	115	70	105	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	5	12	114	0	0	0	pc Sockeye Salmon	Sockeye Salmon	95	115	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	5	13	118	0	0	0	pc Chop Scallop	Chop Scallop	95	535	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	5	14	119	0	0	0	pc Masago	Masago	165	10	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	5	15	120	0	0	0	pc Ika	Ika	165	115	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	5	16	124	0	0	0	pc Saba	Saba	165	535	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	5	17	110	0	0	0	pc Tamago	Tamago	25	220	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	18	111	0	0	0	pc Ebi	Ebi	25	325	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	19	112	0	0	0	pc Tuna	Tuna	25	430	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	20	117	0	0	0	pc Hokkigai	Hokkigai	95	430	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	21	116	0	0	0	pc Tai	Tai	95	325	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	22	113	0	0	0	pc Atlantic Salmon	Atlantic Salmon	95	10	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	5	23	115	0	0	0	pc Smoked Salmon	Smoked Salmon	95	220	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	5	24	121	0	0	0	pc Toro	Toro	165	220	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	5	25	123	0	0	0	pc Tobiko	Tobiko	165	430	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	5	26	126	0	0	0	pc Ikura	Ikura	235	115	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	5	27	122	0	0	0	pc Hamachi	Hamachi	165	325	70	105	Arial	12	1	0	-16777208	13540765		0	0	0		0			0	1
+1	5	28	127	0	0	0	pc Unagi	Unagi	235	220	70	105	Arial	12	1	0	-16777208	13540765		0	0	0		0			0	1
+1	5	29	128	0	0	0	pc Red Tuna	Red Tuna	235	325	70	105	Arial	12	1	0	-16777208	13540765		0	0	0		0			0	1
+1	5	30	129	0	0	0	pc Amaebi	Amaebi	235	430	70	105	Arial	12	1	0	-16777208	13540765		0	0	0		0			0	1
+1	5	31	125	0	0	0	pc Tako	Tako	235	10	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	5	32	130	0	0	0	pc Aburi Tuna	Aburi
+Tuna	335	10	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	5	33	131	0	0	0	pc Aburi Salmon	Aburi Salmon	335	115	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	5	34	136	0	0	0	pc Aburi Unagi	Aburi
+Unagi	405	10	70	105	Arial	12	1	0	-16777208	13210258		0	0	0		0			0	1
+1	5	35	135	0	0	0	pc Aburi Saba	Aburi
+Saba	335	535	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	5	36	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	6	1	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	6	2	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	6	3	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	6	4	0	0	0	0		Sashimi	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	6	5	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	6	6	137	0	0	0	Tuna Sashimi	Tuna
+Sashimi	25	10	100	125	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	6	7	139	0	0	0	Sockeye Salmon SA	Sockeye Salmon
+Sashimi	25	260	100	125	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	6	8	140	0	0	0	Tuna&Salmon SA	Tuna&&Salmon
+Sashimi	25	385	100	125	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	6	9	141	0	0	0	Toro Sashimi	Toro
+Sashimi	25	510	100	125	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	6	10	227	0	0	0	Half Sockeye SA	Half
+Sockeye Salmon Sashimi	130	260	80	125	Arial	11	1	0	-16777208	16744703		0	0	0		0			0	1
+1	6	11	229	0	0	0	Half Tuna Salmon SA	Half Tuna&&Salmon Sashimi	130	385	80	125	Arial	12	1	0	-16777208	33023		0	0	0		0			0	1
+1	6	12	142	0	0	0	Tuna Tataki Sashimi	Tuna Tataki Sashimi	225	10	100	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	6	13	143	0	0	0	Spicy Tuna Sashimi	Spicy Tuna Sashimi	225	135	100	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	6	14	144	0	0	0	Spicy Salmon Sashimi	Spicy Salmon Sashimi	225	260	100	125	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	6	15	145	0	0	0	Hamachi Sashimi	Hamachi Sashimi	225	385	100	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	6	16	146	0	0	0	Assorted Sashimi	Assorted Sashimi	225	510	100	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	6	17	147	0	0	0	Deluxe Assorted SA	Deluxe Assorted
+Sashimi	325	10	100	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	6	18	148	0	0	0	Hama Special Sashimi	Hama Special Sashimi	325	135	100	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	6	19	228	0	0	0	Half Toro Sashimi	Half Toro Sashimi	130	510	80	125	Arial	12	1	0	-16777208	65408		0	0	0		0			0	1
+1	6	20	225	0	0	0	Half Tuna Sashimi	Half
+Tuna
+Sashimi	130	10	80	125	Arial	12	1	0	-16777208	16776960		0	0	0		0			0	1
+1	6	21	138	0	0	0	Atlantic Salmon SA	Atlantic Salmon Sashimi	25	135	100	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	6	22	226	0	0	0	Half Atlantic SA	Half
+Atlantic Salmon Sashimi	130	135	80	125	Arial	11	1	0	-16777208	65535		0	0	0		0			0	1
+1	6	23	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	7	1	156	0	0	0	Box 1 (Chicken)	Box 1 (Chicken)	235	110	100	105	Arial	12	1	0	16777215	9527808		0	0	0		0			0	1
+1	7	2	159	0	0	0	Box 2 (Beef)	Box 2 (Beef)	235	215	100	105	Arial	12	1	0	16777215	10637649		0	0	0		0			0	1
+1	7	3	158	0	0	0	Box 2 (Chicken)	Box 2 (Chicken)	235	320	100	105	Arial	12	1	0	16777215	10637649		0	0	0		0			0	1
+1	7	4	160	0	0	0	Box 3	Box 3	235	425	100	105	Arial	12	1	0	16777215	4210816		0	0	0		0			0	1
+1	7	5	161	0	0	0	Box 4	Box 4	235	530	100	105	Arial	12	1	0	16777215	6184448		0	0	0		0			0	1
+1	7	6	0	0	0	0		Combo	210	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	7	7	157	0	0	0	Box 1 (Beef)	Box 1 (Beef)	235	5	100	105	Arial	12	1	0	16777215	9527808		0	0	0		0			0	1
+1	7	8	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	7	9	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	7	10	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	7	11	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	7	12	151	0	0	0	Hama Combo	Hama
+Combo	25	320	90	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	7	13	155	0	0	0	Sashimi&Nigiri Com	Sashimi && Nigiri Combo	115	320	90	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	7	14	152	0	0	0	Crazy Combo	Crazy
+Combo	25	475	90	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	7	15	153	0	0	0	Udon Com(Chicken)	Udon Combo(Chicken)	115	165	90	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	7	16	154	0	0	0	Udon Combo(Beef)	Udon Combo(Beef)	115	10	90	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	7	17	150	0	0	0	Veggie Combo	Veggie
+Combo	25	165	90	155	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	7	18	149	0	0	0	Dynamite Combo	Dynamite
+Combo	25	10	90	155	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	7	19	0	0	0	0		Combo	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	7	20	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	8	1	178	0	0	0	Sparkling (Orange)	Sparkling Water
+(Orange)	185	160	80	155	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	8	2	177	0	0	0	Sparkling (Lemon)	Sparkling Water
+(Lemon)	185	315	80	155	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	8	3	179	0	0	0	Sparkling (Pomeg.)	Sparkling Water
+(Pomegranate)	185	470	80	155	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	8	4	1	1	0	0	Open Food	Open
+Food	509	290	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	8	5	4	0	0	1	No Option	No
+Option	509	190	70	100	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	8	6	5	0	0	1	Ex Option	Ex
+Option	509	90	70	100	Arial	12	1	0	16777215	8410624		0	0	0		0			0	1
+1	8	7	3	0	0	1	ToGo	ToGo	509	490	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	8	8	167	0	0	0	Coke	Coke	25	5	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	9	168	0	0	0	Diet Coke	Diet Coke	25	130	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	10	169	0	0	0	Coke Zero	Coke Zero	25	255	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	11	170	0	0	0	Pepsi	Pepsi	25	380	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	12	171	0	0	0	Sprite	Sprite	25	505	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	13	173	0	0	0	Ice Tea	Ice Tea	104	130	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	14	174	0	0	0	Crush	Crush	104	255	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	15	172	0	0	0	Ginger Ale	Ginger Ale	104	5	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	16	176	0	0	0	Sparkling (Plain)	Sparkling Water
+(Plain)	185	5	80	155	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	8	17	0	0	0	0		Dessert	269	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	8	18	180	0	0	0	Green Tea Ice Cream	Green Tea
+Ice Cream	294	5	80	155	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	8	19	181	0	0	0	Mango Ice Cream	Mango
+Ice Cream	294	160	80	155	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	8	20	0	0	0	0		Drinks	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	8	21	183	0	0	0	Taro Cheese Cake	Taro Cheese  Cake	294	470	80	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	8	22	182	0	0	0	Green Tea Chs Cake	Green Tea
+Cheese Cake	294	315	80	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	8	23	230	0	0	0	Black Sesame Chs Cake	Black Sesame Cheese Cake	378	317	80	155	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	8	24	2	1	0	0	Sub Charge	Sub Charge	509	390	70	100	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	8	25	175	0	0	0	Root Beer	Root Beer	104	380	80	125	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	8	26	282	0	0	0	Water	Water	106	505	80	125	Arial	12	1	0	-16777208	16744576		0	0	0		0			0	1
+1	9	1	0	0	0	0		Beer	0	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	9	2	206	0	0	0	Hakutsuru Sayuri	Hakutsuru Sayuri	260	425	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	9	3	205	0	0	0	Haku Junmai Ginjo	Hakutsuru Junmai Ginjo	260	320	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	9	4	185	0	0	0	Okanagan Lager	Okanagan Lager	25	110	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	9	5	186	0	0	0	Kokanee	Kokanee	25	215	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	9	6	188	0	0	0	Budweiser	Budweiser	25	425	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	9	7	189	0	0	0	Canadian	Canadian	25	530	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	9	8	190	0	0	0	Sapporo(330ml)	Sapporo(330ml)	95	5	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	9	191	0	0	0	Sapporo(500ml)	Sapporo(500ml)	95	110	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	10	192	0	0	0	Asahi(330ml)	Asahi(330ml)	95	215	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	11	194	0	0	0	Kirin	Kirin	95	425	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	12	195	0	0	0	Tsing Tao	Tsing Tao	95	530	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	13	0	0	0	0		Sake	235	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	9	14	207	0	0	0	Nakano Ume	Nakano Ume	260	530	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	9	15	0	0	0	0		Wine	330	0	25	640	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	9	16	209	0	0	0	House White(B)	House White
+(Bottle)	355	110	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	17	210	0	0	0	Chardonnay(G)	Chardonnay
+(Glass)	355	215	70	105	Arial	11	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	18	211	0	0	0	Chardonnay(B)	Chardonnay
+(Bottle)	355	320	70	105	Arial	11	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	19	212	0	0	0	Sauvignon(G)	Sauvignon
+(Glass)	355	425	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	20	213	0	0	0	Sauvignon(B)	Sauvignon
+(Bottle)	355	530	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	21	214	0	0	0	Pinot Grigio(G)	Pinot
+Grigio
+(Glass)	425	5	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	22	215	0	0	0	Pinot Grigio(B)	Pinot
+Grigio
+(Bottle)	425	110	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	23	216	0	0	0	House Red(G)	House
+Red
+(Glass)	495	5	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	9	24	217	0	0	0	House Red(B)	House
+Red
+(Bottle)	495	110	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	9	25	218	0	0	0	Cabernet(G)	Cabernet
+(Glass)	495	215	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	9	26	220	0	0	0	Merlot(G)	Merlot
+(Glass)	495	425	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	9	27	221	0	0	0	Merlot(B)	Merlot
+(Bottle)	495	530	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	9	28	219	0	0	0	Cabernet(B)	Cabernet
+(Bottle)	495	320	70	105	Arial	12	1	0	-16777208	8421631		0	0	0		0			0	1
+1	9	29	208	0	0	0	House White(G)	House White
+(Glass)	355	5	70	105	Arial	12	1	0	-16777208	8454143		0	0	0		0			0	1
+1	9	30	203	0	0	0	Hot Sake(L)	Hot Sake
+(L)	260	110	70	105	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	9	31	202	0	0	0	Hot Sake(S)	Hot Sake
+(S)	260	5	70	105	Arial	12	1	0	-16777208	12615935		0	0	0		0			0	1
+1	9	32	196	0	0	0	Corona	Corona	165	5	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	33	197	0	0	0	Stella	Stella	165	110	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	34	198	0	0	0	Heineken	Heineken	165	215	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	35	193	0	0	0	Asahi(2L)	Asahi
+(2L)	95	320	70	105	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	9	36	187	0	0	0	Coors Light	Coors
+Light	25	320	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	9	37	184	0	0	0	Okanagan Pale Ale	Okanagan Pale Ale	25	5	70	105	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	9	38	199	0	0	0	OK Sider(Peach)	Okanagan Cider(Peach)	165	320	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	9	39	200	0	0	0	OK Sider(Apple)	Okanagan Cider(Apple)	165	425	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	9	40	201	0	0	0	OK Sider(Pear)	Okanagan Cider
+(Pear)	165	530	70	105	Arial	12	1	0	-16777208	8454016		0	0	0		0			0	1
+1	9	41	204	0	0	0	Hakutsuru Draft	Hakutsuru Draft	260	215	70	105	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	9	42	285	0	0	0	Soju	Soju	425	325	70	105	Arial	12	1	0	-16777208	4259584		0	0	0		0			0	1
+1	10	1	279	0	0	0	Delivery Fee	Delivery Fee	509	0	70	115	Arial	12	1	0	16777215	0		0	0	0		0			0	1
+1	10	2	238	0	0	0	Gunmandu	32.Gunmandu	0	0	70	115	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	10	3	239	0	0	0	Gogimandu	33.Gogimandu	0	119	70	115	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	10	4	240	0	0	0	Yukgaejang	3.Yukgaejang	0	238	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+1	10	5	242	0	0	0	Doenjang-jjigae	Doenjang-jjigae	0	476	70	115	Arial	12	1	0	-16777208	33023		0	0	0		0			0	1
+1	10	6	243	0	0	0	Bibimbap	Bibimbap	72	1	70	115	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	10	7	244	0	0	0	Omelet Rice	9.Omelet Rice	73	119	70	115	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	10	8	245	0	0	0	Bokkeumbob	10.Bokkeumbob	73	237	70	118	Arial	12	1	0	-16777208	16777088		0	0	0		0			0	1
+1	10	9	246	0	0	0	Kimchi Soup	Kimchi Soup	72	357	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+1	10	10	247	0	0	0	Dumpling Soup	37.Dumpling Soup	73	476	70	115	Arial	12	1	0	-16777208	16744448		0	0	0		0			0	1
+1	10	11	248	0	0	0	Jajangmyeon	38.Jajangmyeon	144	0	70	115	Arial	12	1	0	-16777208	12632256		0	0	0		0			0	1
+1	10	12	249	0	0	0	Jjamppong	39.Jjamppong	146	120	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+1	10	13	250	0	0	0	Tangsuyuk	53.Tangsuyuk	147	239	70	115	Arial	12	1	0	-16777208	65535		0	0	0		0			0	1
+1	10	14	251	0	0	0	Gganpoonggi	54.Gganpoonggi	148	358	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+1	10	15	252	0	0	0	Japchae	58.Japchae	147	477	70	115	Arial	12	1	0	-16777208	33023		0	0	0		0			0	1
+1	10	16	253	0	0	0	Gimbob	68.Gimbob	218	1	70	115	Arial	12	1	0	-16777208	12632256		0	0	0		0			0	1
+1	10	17	254	0	0	0	Spicy Rice Cake	Spicy Rice Cake	220	121	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+1	10	18	260	0	0	0	LA Galbi Gui	28.LA Galbi Gui	221	240	70	115	Arial	12	1	0	-16777208	16512		0	0	0		0			0	1
+1	10	19	280	0	0	0	Pork Bone Soup	67.Pork Bone Soup	221	359	70	115	Arial	12	1	0	-16777208	65280		0	0	0		0			0	1
+1	10	20	257	0	0	0	Dupbob	Dupbob	350	0	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+1	10	21	262	0	0	0	Bulgogi	27.Bulgogi	349	118	70	115	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	10	22	264	0	0	0	Teriyaki	22.Teriyaki	349	238	70	115	Arial	12	1	0	-16777208	33023		0	0	0		0			0	1
+1	10	23	271	0	0	0	Bukum Udon	42.Bukum Udon	350	356	70	118	Arial	12	1	0	-16777208	4227327		0	0	0		0			0	1
+1	10	24	275	0	0	0	Udon	Udon	350	476	70	115	Arial	12	1	0	-16777208	33023		0	0	0		0			0	1
+1	10	25	241	0	0	0	Sundubu	Sundubu	0	357	70	115	Arial	12	1	0	-16777208	255		0	0	0		0			0	1
+2	4	0	0	0	0	0		No Option (TG)	0	0	0	0	Arial	10	0	0	8388608	-16777201		0	0	0		0			0	1
+2	5	0	0	0	0	0		Ex Option (TG)	0	0	0	0	Arial	10	0	0	8388608	-16777201		0	0	0		0			0	1
+3	4	1	4	0	0	1	No Green Onion	No
+Green Onion	0	315	100	100	Arial	12	1	0	255	16777215		0	0	12		0			0	1
+3	4	2	4	0	0	1	No Onion	No
+Onion	0	415	100	100	Arial	12	1	0	255	16777215		0	0	14		0			0	1
+3	4	3	4	0	0	1	No Vege	No
+Vege	0	515	100	100	Arial	12	1	0	255	16777215		0	0	19		0			0	1
+3	4	4	4	0	0	1	No Sesame	No
+Sesame	100	15	100	100	Arial	12	1	0	255	16777215		0	0	16		0			0	1
+3	4	5	4	0	0	1	No Tobiko	No
+Tobiko	100	115	100	100	Arial	12	1	0	255	16777215		0	0	18		0			0	1
+3	4	6	4	0	0	1	No Mayo	No
+Mayo	100	215	100	100	Arial	12	1	0	255	16777215		0	0	13		0			0	1
+3	4	7	4	0	0	1	No Sauce	No
+Sauce	100	415	100	100	Arial	12	1	0	255	16777215		0	0	15		0			0	1
+3	4	8	4	0	0	1	No Spicy	No
+Spicy	100	515	100	100	Arial	12	1	0	255	16777215		0	0	17		0			0	1
+3	4	9	4	0	0	1	No Garlic	No
+Garlic	0	115	100	100	Arial	12	1	0	255	16777215		0	0	10		0			0	1
+3	4	10	4	0	0	1	No Cucumber	No Cucumber	0	15	100	100	Arial	12	1	0	255	16777215		0	0	9		0			0	1
+3	4	11	4	0	0	1	No Wasabi	No
+Wasabi	100	315	100	100	Arial	12	1	0	255	16777215		0	0	20		0			0	1
+3	4	12	4	0	0	1	No Ginger	No
+Ginger	0	215	100	100	Arial	12	1	0	255	16777215		0	0	11		0			0	1
+3	5	1	5	0	0	1	Ex Option	Ex
+Sauce	0	415	100	100	Arial	12	1	0	16711680	16777215		0	0	3		0			0	1
+3	5	2	5	0	0	1	Ex Option	Ex
+Spicy	0	515	100	100	Arial	12	1	0	16711680	16777215		0	0	4		0			0	1
+3	5	3	5	0	0	1	Ex Option	Sauce On Side	100	115	40	400	Arial	12	1	0	16711680	16777215		0	0	8		0			0	1
+3	5	4	5	0	0	1	Ex Option	Ex
+Ginger	0	15	100	100	Arial	12	1	0	16711680	16777215		0	0	2		0			0	1
+3	5	5	5	0	0	1	Ex Option	Ex
+Meat	0	115	100	100	Arial	12	1	0	16711680	16777215		0	0	6		0			0	1
+3	5	6	5	0	0	1	Ex Option	Ex
+Vege	0	215	100	100	Arial	12	1	0	16711680	16777215		0	0	5		0			0	1
+3	5	7	5	0	0	1	Ex Option	Ex
+Wasabi	0	315	100	100	Arial	12	1	0	16711680	16777215		0	0	7		0			0	1
+3	5	8	5	0	0	1	Ex Option	Add Deep Fried Tofu	140	115	100	100	Arial	12	1	0	-16777208	4227327		0	0	22		0			0	1
+3	5	9	5	0	0	1	Ex Option	Cone	140	215	100	100	Arial	12	1	0	-16777208	4227327		0	0	21		0			0	1
+3	5	10	5	0	0	1	Ex Option	Spicy	142	14	100	100	Arial	12	1	0	16777215	255		0	0	4		0			0	1
+3	5	11	5	0	0	1	Ex Option	Sockeye Salmon	140	315	100	100	Arial	12	1	0	-16777208	16777088		0	0	23		0			0	1
+3	5	12	5	0	0	1	Side of Spicy Mayo	Side of Spicy Mayo	141	417	98	107	Arial	12	1	0	-16777208	8421631		0	0	24		0			0	1

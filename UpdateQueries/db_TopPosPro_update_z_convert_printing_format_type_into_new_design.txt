@@ -1,0 +1,132 @@
+EXEC dbo.sp_executesql @statement = N'
+  declare @OrderPrintFormatType varchar(5), @UseBarPrinterLikeBackKitchenPrinter varchar(10),
+          @UseFront2PrinterLikeFrontKitchenPrinter varchar(10), @CutItemsOnKitchenPRN3 varchar(10),
+          @BackBeeper varchar(10), @FrontBeeper varchar(10), @Front2Beeper varchar(10)
+
+  select @OrderPrintFormatType = ltrim(rtrim(Value))
+  from tblMisc
+  where Code = ''OPFT''
+
+  set @OrderPrintFormatType = isnull(@OrderPrintFormatType, ''A'')
+
+  if (@OrderPrintFormatType in (''A'', ''B'', ''C'', ''D'', ''DS'', ''E'')) begin
+
+    select @UseBarPrinterLikeBackKitchenPrinter = ltrim(rtrim(Value))
+    from tblMisc
+    where Code = ''BPBKP''
+
+    select @UseFront2PrinterLikeFrontKitchenPrinter = ltrim(rtrim(Value))
+    from tblMisc
+    where Code = ''F2PFP''
+
+    select @CutItemsOnKitchenPRN3 = ltrim(rtrim(Value))
+    from tblMisc
+    where Code = ''CIKP3''
+
+    select @BackBeeper = ltrim(rtrim(Value))
+    from tblMisc
+    where Code = ''ENB''
+
+    select @FrontBeeper = ltrim(rtrim(Value))
+    from tblMisc
+    where Code = ''ENFB''
+
+    select @Front2Beeper = ltrim(rtrim(Value))
+    from tblMisc
+    where Code = ''ENF2B''
+
+    update tblPeripherals
+    set Value = @BackBeeper
+    where Code = ''KP1BP''
+
+    update tblPeripherals
+    set Value = @FrontBeeper
+    where Code = ''KP2BP''
+
+    update tblPeripherals
+    set Value = @Front2Beeper
+    where Code = ''KP3BP''
+
+    if (upper(@CutItemsOnKitchenPRN3) = ''TRUE'') begin
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code like ''KP3CI''
+
+    end
+
+    if (@OrderPrintFormatType = ''B'') begin
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code in (''KP1B2'', ''KP2B1'')
+
+      if (upper(@UseBarPrinterLikeBackKitchenPrinter) = ''TRUE'') and 
+         (upper(@UseFront2PrinterLikeFrontKitchenPrinter) <> ''TRUE'') begin
+
+        update tblPeripherals
+        set Value = ''True''
+        where Code in (''KP1B2'', ''KP2B1'', ''KP2B4'', ''KP3B1'', ''KP3B4'', ''KP4B2'')
+
+      end
+      else if (upper(@UseBarPrinterLikeBackKitchenPrinter) <> ''TRUE'') and 
+              (upper(@UseFront2PrinterLikeFrontKitchenPrinter) = ''TRUE'') begin
+
+        update tblPeripherals
+        set Value = ''True''
+        where Code in (''KP1B2'', ''KP1B3'', ''KP2B1'', ''KP3B1'', ''KP4B2'', ''KP4B3'')
+
+      end
+      else if (upper(@UseBarPrinterLikeBackKitchenPrinter) = ''TRUE'') and 
+              (upper(@UseFront2PrinterLikeFrontKitchenPrinter) = ''TRUE'') begin
+
+        update tblPeripherals
+        set Value = ''True''
+        where Code in (''KP1B2'', ''KP1B3'', ''KP2B1'', ''KP2B4'', ''KP3B1'', ''KP3B4'', ''KP4B2'', ''KP4B3'')
+
+      end
+
+    end
+    else if (@OrderPrintFormatType = ''C'') begin
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code = ''KP2B1''  
+
+    end
+    else if (@OrderPrintFormatType = ''D'') begin
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code = ''KP1CI''
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code = ''KP2B1''
+
+    end
+    else if (@OrderPrintFormatType = ''DS'') begin 
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code = ''KP1CI''
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code in (''KP2B1'', ''KP4B1'')
+
+    end
+    else if (@OrderPrintFormatType = ''E'') begin
+
+      update tblPeripherals
+      set Value = ''True''
+      where Code like ''KP[12]CI''
+
+    end
+
+    update tblMisc
+    set Value = ''''
+    where Code = ''OPFT''
+
+  end'
+GO

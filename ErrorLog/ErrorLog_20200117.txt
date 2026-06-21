@@ -1,0 +1,4 @@
+2020-01-17 12:33:42 PM  ---> (ChangeMoneyLog2) To see if this part of the code is actually called...  SalesID: 150
+2020-01-17 12:54:42 PM  ---> (ChangeMoneyLog1) To see if this part of the code is actually called...  SalesID: 151
+2020-01-17 6:13:28 PM  ---> (ChangeMoneyLog2) To see if this part of the code is actually called...  SalesID: 170
+2020-01-17 7:14:39 PM  ---> (ChangeMoneyLog1) To see if this part of the code is actually called...  SalesID: 180

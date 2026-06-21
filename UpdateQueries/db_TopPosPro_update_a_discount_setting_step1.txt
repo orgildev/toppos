@@ -1,0 +1,33 @@
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select *
+               from sys.objects 
+               where object_id = OBJECT_ID(N''[dbo].[tblDayHourDiscount]'') 
+                 and type in (N''U'')) begin
+
+  select i.ID as ItemID
+  into tmpUpdate_ApplyDSCItem
+  from tblItem i
+  where i.ApplyDSC = 1
+
+  select a.ItemID, a.SizeID, h.FromHour, h.ToHour, a.HourDSCPrice
+  into tmpUpdate_HourDSC
+  from tblItem i, tblAvailableSize a, tblHourDiscount h
+  where a.ItemID = i.ID
+    and h.ItemID = i.ID
+    and i.HourDollarDSC = 1
+
+  select d.*
+  into tmpUpdate_DayRateDiscount
+  from tblItem i, tblItemDiscount d
+  where d.ItemID = i.ID
+    and i.DailyDSC = 1
+ 
+  select h.*
+  into tmpUpdate_HourRateDiscount
+  from tblItem i, tblHourDiscount h
+  where h.ItemID = i.ID
+    and i.HourDSC = 1
+
+end
+'
+GO

@@ -1,0 +1,44 @@
+USE master
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+declare @procedure_nm nvarchar(200)
+
+declare sp_curs cursor for
+  select ''drop procedure dbo.'' + [name] 
+  from sys.objects 
+  where type in (N''P'')
+    and is_ms_shipped = 0
+    and [name] = ''sp_BackupDatabase''
+  order by [name]
+
+  open sp_curs
+  fetch next from sp_curs into @procedure_nm
+  while (@@fetch_status=0) begin
+    exec sp_executesql @procedure_nm
+    fetch next from sp_curs into @procedure_nm
+  end
+  close sp_curs
+deallocate sp_curs'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+CREATE PROCEDURE [dbo].[sp_BackupDatabase]
+  @backupDirectoryPath varchar(200)
+AS
+BEGIN
+
+  SET NOCOUNT ON;
+ 
+  declare @backupFilePathAndName varchar(1000), @dateTime nvarchar(20)
+
+  set @dateTime = convert(varchar, getdate(), 112) + replace(convert(varchar, getdate(), 108), '':'', '''')
+  set @backupFilePathAndName = @backupDirectoryPath + ''\TPPro_'' + @dateTime + ''.bak''
+  
+  exec TPPro.dbo.sp_BackupDatabase @backupFilePathAndName
+
+END'
+GO
+
+USE TPPro
+GO

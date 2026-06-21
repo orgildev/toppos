@@ -1,0 +1,3981 @@
+ALTER TABLE [dbo].[tblCategory]
+  ADD
+    [PrintOrder] [tinyint] NOT NULL CONSTRAINT [DF_tblCategory_PrintOrder]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD
+    [ApplyPST2] [bit] NOT NULL CONSTRAINT [DF_tblItem_ApplyPST2]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [BarCode] [varchar](15) NOT NULL CONSTRAINT [DF_tblItem_BarCode]  DEFAULT ('')
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [KitchenE] [bit] NOT NULL CONSTRAINT [DF_tblItem_KitchenE]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblOrderNumber]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblOrderNumber](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[OrderNumber] [int] NOT NULL CONSTRAINT [DF_tblOrderNumber_OrderNumber]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblOrderNumber] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [ExtraChargeItem] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrders_ExtraChargeItem]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [ApplyPST2] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrders_ApplyPST2]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [KitchenE] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrders_KitchenE]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [DSCAmtEmployee] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrders_DSCAmtEmployee]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [DSCAmtType1] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrders_DSCAmtType1]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [DSCAmtType2] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrders_DSCAmtType2]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardChargeHistory] DROP CONSTRAINT [FK_tblPrepaidCardChargeHistory_tblPrepaidCards]
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardUsageHistory] DROP CONSTRAINT [FK_tblPrepaidCardUsageHistory_tblPrepaidCards]
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCards] ALTER COLUMN [Barcode] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardChargeHistory] ALTER COLUMN [Barcode] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardUsageHistory] ALTER COLUMN [Barcode] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardChargeHistory] ADD CONSTRAINT
+	[FK_tblPrepaidCardChargeHistory_tblPrepaidCards] FOREIGN KEY
+	(
+	Barcode
+	) REFERENCES [dbo].[tblPrepaidCards]
+	(
+	Barcode
+	) ON UPDATE  CASCADE 
+	 ON DELETE  CASCADE 
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardUsageHistory] ADD CONSTRAINT
+	[FK_tblPrepaidCardUsageHistory_tblPrepaidCards] FOREIGN KEY
+	(
+	Barcode
+	) REFERENCES [dbo].[tblPrepaidCards]
+	(
+	Barcode
+	) ON UPDATE  CASCADE 
+	 ON DELETE  CASCADE 
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPurchaseItemCategory]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPurchaseItemCategory](
+	[ID] [tinyint] IDENTITY(1,1) NOT NULL,
+	[PurchaseItemCategoryName] [varchar](30) NOT NULL,
+ CONSTRAINT [PK_tblPurchaseItemCategory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPurchaseItem]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPurchaseItem](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[PurchaseItemName] [varchar](50) NOT NULL,
+	[Unit] [varchar](20) NOT NULL CONSTRAINT [DF_tblPurchaseItem_Unit]  DEFAULT (''),
+	[PurchaseItemCategoryID] [tinyint] NOT NULL,
+	[Status] [bit] NOT NULL CONSTRAINT [DF_tblPurchaseItem_Status]  DEFAULT ((1)),
+ CONSTRAINT [PK_tblPurchaseItem] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPurchaseItem]  WITH CHECK ADD  CONSTRAINT [FK_tblPurchaseItem_tblPurchaseItemCategory] FOREIGN KEY([PurchaseItemCategoryID])
+REFERENCES [dbo].[tblPurchaseItemCategory] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPurchaseItem] CHECK CONSTRAINT [FK_tblPurchaseItem_tblPurchaseItemCategory]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPurchaseOrder]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPurchaseOrder](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[PurchaseOrderDate] [smalldatetime] NOT NULL,
+	[SenderEmail] [varchar](100) NOT NULL CONSTRAINT [DF_tblPurchaseOrder_SenderEmail]  DEFAULT (''),
+	[RecipientEmail] [varchar](100) NOT NULL,
+	[Subject] [varchar](200) NOT NULL,
+	[Message] [text] NOT NULL,
+	[AttachmentFilePath] [varchar](200) NOT NULL,
+ CONSTRAINT [PK_tblPurchaseOrder] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPurchaseOrderDetail]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPurchaseOrderDetail](
+	[PurchaseOrderID] [int] NOT NULL,
+	[PurchaseItemID] [int] NOT NULL,
+	[Qty] [float] NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPurchaseOrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblPurchaseOrderDetail_tblPurchaseItem] FOREIGN KEY([PurchaseItemID])
+REFERENCES [dbo].[tblPurchaseItem] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPurchaseOrderDetail] CHECK CONSTRAINT [FK_tblPurchaseOrderDetail_tblPurchaseItem]
+GO
+
+ALTER TABLE [dbo].[tblPurchaseOrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblPurchaseOrderDetail_tblPurchaseOrder] FOREIGN KEY([PurchaseOrderID])
+REFERENCES [dbo].[tblPurchaseOrder] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPurchaseOrderDetail] CHECK CONSTRAINT [FK_tblPurchaseOrderDetail_tblPurchaseOrder]
+GO
+
+ALTER TABLE dbo.tblPurchaseOrderDetail
+  DROP CONSTRAINT FK_tblPurchaseOrderDetail_tblPurchaseItem
+GO
+
+ALTER TABLE dbo.tblPurchaseOrderDetail ADD CONSTRAINT
+	FK_tblPurchaseOrderDetail_tblPurchaseItem FOREIGN KEY
+	(
+	PurchaseItemID
+	) REFERENCES dbo.tblPurchaseItem
+	(
+	ID
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  CASCADE 
+GO
+
+ALTER TABLE dbo.tblReservation 
+  ADD
+    [PhoneNumber] [varchar](15) NOT NULL CONSTRAINT DF_tblReservation_PhoneNumber DEFAULT ('')
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [TakeOutOrder] [bit] NOT NULL CONSTRAINT [DF_tblSales_TakeOutOrder]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [TableID] [smallint] NOT NULL CONSTRAINT [DF_tblSales_TableID]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblSubItem]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblSubItem](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SubItemDescription] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_tblSubItem] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblSubItem]  WITH CHECK ADD  CONSTRAINT [FK_tblSubItem_tblItem] FOREIGN KEY([ItemID])
+REFERENCES [dbo].[tblItem] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblSubItem] CHECK CONSTRAINT [FK_tblSubItem_tblItem]
+GO
+
+if not exists (select * 
+               from tblSales 
+               where VisaPaid > 0 
+                  or McPaid > 0 
+                  or AmexPaid > 0) begin
+  update tblSales
+  set VisaPaid = case CardType when 'V' then CreditPaid else 0 end,
+      McPaid = case CardType when 'M' then CreditPaid else 0 end,
+      AmexPaid = case CardType when 'A' then CreditPaid else 0 end
+  where CreditPaid <> 0
+end
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [Attention] [bit] NOT NULL CONSTRAINT [DF_tblTable_Attention]  DEFAULT ((0))
+GO
+
+CREATE NONCLUSTERED INDEX [idx_SaleDateTime] ON [dbo].[tblSales] 
+(
+	[SaleDateTime] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblReservation]
+  ADD    
+    [Memo] [varchar](255) NOT NULL CONSTRAINT [DF_tblReservation_Memo]  DEFAULT ('')
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  CREATE TABLE [dbo].[tblMenuLayout2](
+    [Level] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_Level]  DEFAULT ((0)),
+    [TabIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_TabIndex]  DEFAULT ((0)),
+    [ControlIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_CtrlIndex]  DEFAULT ((0)),
+    [ItemID] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_ItemID]  DEFAULT ((0)),
+    [OpenItem] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout2_OpenItem]  DEFAULT ((0)),
+    [SideDish] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout2_SideDish]  DEFAULT ((0)),
+    [Taste] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout2_Taste]  DEFAULT ((0)),
+    [ItemName] [varchar](30) NOT NULL CONSTRAINT [DF_tblMenuLayout2_ItemName]  DEFAULT (''),
+    [Caption] [varchar](30) NOT NULL CONSTRAINT [DF_tblMenuLayout2_Caption]  DEFAULT (''),
+    [AlignTop] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_AlignTop]  DEFAULT ((0)),
+    [AlignLeft] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_AlignLeft]  DEFAULT ((0)),
+    [Height] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_Height]  DEFAULT ((1)),
+    [Width] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_Width]  DEFAULT ((1)),
+    [FontName] [varchar](20) NOT NULL CONSTRAINT [DF_tblMenuLayout2_FontName]  DEFAULT ('Arial'),
+    [FontSize] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout2_FontSize]  DEFAULT ((12)),
+    [FontBold] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout2_FontBold]  DEFAULT ((0)),
+    [FontItalic] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout2_FontItalic]  DEFAULT ((0)),
+    [FontColor] [int] NOT NULL CONSTRAINT [DF_tblMenuLayout2_FontColor]  DEFAULT ((0)),
+    [Color] [int] NOT NULL CONSTRAINT [DF_tblMenuLayout2_Color]  DEFAULT ((0)),
+    [ImageFileName] [varchar](100) NOT NULL CONSTRAINT [DF_tblMenuLayout2_Image]  DEFAULT ('')
+  ) ON [PRIMARY]
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  insert into tblMenuLayout2 ([Level], TabIndex, ControlIndex, ItemID, OpenItem, SideDish, Taste, 
+                              ItemName, Caption, AlignTop, AlignLeft, Height, Width, 
+                              FontSize, FontBold, FontItalic, FontColor, Color)
+  select [Level], TabIndex, CtrlIndex, ItemID, OpenItem, SideDish, Taste, 
+         ItemName, Caption, AlignTop, AlignLeft, Height, Width,  
+         FontSize, 1, 0, FontColor, Color
+  from tblMenuLayout
+  order by [Level], TabIndex, CtrlIndex
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  drop table tblMenuLayout
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  CREATE TABLE [dbo].[tblMenuLayout](
+    [Level] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout_Level]  DEFAULT ((0)),
+    [TabIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout_TabIndex]  DEFAULT ((0)),
+    [ControlIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout_CtrlIndex]  DEFAULT ((0)),
+    [ItemID] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout_ItemID]  DEFAULT ((0)),
+    [OpenItem] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_OpenItem]  DEFAULT ((0)),
+    [SideDish] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_SideDish]  DEFAULT ((0)),
+    [Taste] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_Taste]  DEFAULT ((0)),
+    [ItemName] [varchar](30) NOT NULL CONSTRAINT [DF_tblMenuLayout_ItemName]  DEFAULT (''),
+    [Caption] [varchar](30) NOT NULL CONSTRAINT [DF_tblMenuLayout_Caption]  DEFAULT (''),
+    [AlignTop] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout_AlignTop]  DEFAULT ((0)),
+    [AlignLeft] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout_AlignLeft]  DEFAULT ((0)),
+    [Height] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout_Height]  DEFAULT ((1)),
+    [Width] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout_Width]  DEFAULT ((1)),
+    [FontName] [varchar](20) NOT NULL CONSTRAINT [DF_tblMenuLayout_FontName]  DEFAULT ('Arial'),
+    [FontSize] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout_FontSize]  DEFAULT ((12)),
+    [FontBold] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_FontBold]  DEFAULT ((0)),
+    [FontItalic] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_FontItalic]  DEFAULT ((0)),
+    [FontColor] [int] NOT NULL CONSTRAINT [DF_tblMenuLayout_FontColor]  DEFAULT ((0)),
+    [Color] [int] NOT NULL CONSTRAINT [DF_tblMenuLayout_Color]  DEFAULT ((0)),
+    [ImageFileName] [varchar](100) NOT NULL CONSTRAINT [DF_tblMenuLayout_Image]  DEFAULT ('')
+  ) ON [PRIMARY]
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  insert into tblMenuLayout ([Level], TabIndex, ControlIndex, ItemID, OpenItem, SideDish, Taste, 
+                             ItemName, Caption, AlignTop, AlignLeft, Height, Width, FontName, 
+                             FontSize, FontBold, FontItalic, FontColor, Color, ImageFileName)
+  select [Level], TabIndex, ControlIndex, ItemID, OpenItem, SideDish, Taste, 
+         ItemName, Caption, AlignTop, AlignLeft, Height, Width, FontName, 
+         FontSize, FontBold, FontItalic, FontColor, Color, ImageFileName
+  from tblMenuLayout2
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  drop table tblMenuLayout2
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  update tblMenuLayout
+  set Color = 14803425
+  where Color = 0
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  update tblMenuLayout
+  set FontSize = 12
+  where FontSize = 0
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  CREATE TABLE [dbo].[tblTableLayout2](
+    [Level] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout2_Level]  DEFAULT ((0)),
+    [TabIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout2_TabIndex]  DEFAULT ((0)),
+    [ControlIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout2_ControlIndex]  DEFAULT ((0)),
+    [TableID] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout2_TableID]  DEFAULT ((0)),
+    [Caption] [varchar](50) NOT NULL CONSTRAINT [DF_tblTableLayout2_Caption]  DEFAULT (''),
+    [AlignTop] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout2_AlignTop]  DEFAULT ((0)),
+    [AlignLeft] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout2_AlignLeft]  DEFAULT ((0)),
+    [Height] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout2_Height]  DEFAULT ((1)),
+    [Width] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout2_Width]  DEFAULT ((1)),
+    [FontName] [varchar](20) NOT NULL CONSTRAINT [DF_tblTableLayout2_FontName]  DEFAULT ('Arial'),
+    [FontSize] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout2_FontSize1]  DEFAULT ((12)),
+    [FontBold] [bit] NOT NULL CONSTRAINT [DF_tblTableLayout2_FontBold]  DEFAULT ((0)),
+    [FontItalic] [bit] NOT NULL CONSTRAINT [DF_tblTableLayout2_FontItalic]  DEFAULT ((0)),
+    [FontColor] [int] NOT NULL CONSTRAINT [DF_tblTableLayout2_FontColor1]  DEFAULT ((0)),
+    [Color] [int] NOT NULL CONSTRAINT [DF_tblTableLayout2_Color1]  DEFAULT ((0)),
+    [ImageFileName] [varchar](100) NOT NULL CONSTRAINT [DF_tblTableLayout2_ImageFileName]  DEFAULT (''),
+    [TakeOut] [bit] NOT NULL CONSTRAINT [DF_tblTableLayout2_TakeOut]  DEFAULT ((0))
+  ) ON [PRIMARY]
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  insert into tblTableLayout2 ([Level], TabIndex, ControlIndex, TableID, Caption, AlignTop, AlignLeft, 
+                               Height, Width, FontSize, FontColor, Color, TakeOut)
+  select [Level], TabIndex, CtrlIndex, TableID, Caption, AlignTop, AlignLeft, 
+         Height, Width, FontSize, FontColor, Color, TakeOut
+  from tblTableLayout
+  order by [Level], TabIndex, CtrlIndex
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  drop table tblTableLayout
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  CREATE TABLE [dbo].[tblTableLayout](
+    [Level] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout_Level]  DEFAULT ((0)),
+    [TabIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout_TabIndex]  DEFAULT ((0)),
+    [ControlIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout_ControlIndex]  DEFAULT ((0)),
+    [TableID] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout_TableID]  DEFAULT ((0)),
+    [Caption] [varchar](50) NOT NULL CONSTRAINT [DF_tblTableLayout_Caption]  DEFAULT (''),
+    [AlignTop] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout_AlignTop]  DEFAULT ((0)),
+    [AlignLeft] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout_AlignLeft]  DEFAULT ((0)),
+    [Height] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout_Height]  DEFAULT ((1)),
+    [Width] [smallint] NOT NULL CONSTRAINT [DF_tblTableLayout_Width]  DEFAULT ((1)),
+    [FontName] [varchar](20) NOT NULL CONSTRAINT [DF_tblTableLayout_FontName]  DEFAULT ('Arial'),
+    [FontSize] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout_FontSize1]  DEFAULT ((12)),
+    [FontBold] [bit] NOT NULL CONSTRAINT [DF_tblTableLayout_FontBold]  DEFAULT ((0)),
+    [FontItalic] [bit] NOT NULL CONSTRAINT [DF_tblTableLayout_FontItalic]  DEFAULT ((0)),
+    [FontColor] [int] NOT NULL CONSTRAINT [DF_tblTableLayout_FontColor1]  DEFAULT ((0)),
+    [Color] [int] NOT NULL CONSTRAINT [DF_tblTableLayout_Color1]  DEFAULT ((0)),
+    [ImageFileName] [varchar](100) NOT NULL CONSTRAINT [DF_tblTableLayout_ImageFileName]  DEFAULT (''),
+    [TakeOut] [bit] NOT NULL CONSTRAINT [DF_tblTableLayout_TakeOut]  DEFAULT ((0))
+  ) ON [PRIMARY]
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  insert into tblTableLayout ([Level], TabIndex, ControlIndex, TableID, Caption, AlignTop, AlignLeft, 
+                              Height, Width, FontName, FontSize, FontBold, FontItalic, FontColor, 
+                              Color, ImageFileName, TakeOut)
+  select [Level], TabIndex, ControlIndex, TableID, Caption, AlignTop, AlignLeft, 
+         Height, Width, FontName, FontSize, FontBold, FontItalic, FontColor, 
+         Color, ImageFileName, TakeOut
+  from tblTableLayout2
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  drop table tblTableLayout2
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  update tblTableLayout
+  set Color = 14803425
+  where Color = 0
+end
+GO
+
+if exists (select * from tblTable where ID <= 200 and TakeOut = 1) begin
+  update tblTableLayout
+  set FontSize = 12
+  where FontSize = 0
+end
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+declare @ID int, @OrderNum int, @Linked bit, @TimeIn smalldatetime, @ServerID smallint,
+        @NumOfGuests tinyint, @Opened bit, @TableName varchar(20), @PickupTime varchar(8),
+        @PhoneNum varchar(10), @PickupPerson varchar(20), @TakeOut bit, @DailyOrdNum smallint,
+        @BillPrinted bit, @Attention bit, @NewID int
+
+declare curs_table cursor for 
+  select ID, OrderNum, Linked, TimeIn, ServerID, NumOfGuests, Opened, TableName, PickupTime,
+         PhoneNum, PickupPerson, TakeOut, DailyOrdNum, BillPrinted, Attention
+  from tblTable
+  where TakeOut = 1
+    and ID <= 200
+  order by ID
+
+  open curs_table
+  fetch next from curs_table into @ID, @OrderNum, @Linked, @TimeIn, @ServerID,
+                                  @NumOfGuests, @Opened, @TableName, @PickupTime,
+                                  @PhoneNum, @PickupPerson, @TakeOut, @DailyOrdNum,
+                                  @BillPrinted, @Attention
+  set @NewID = 201
+  while (@@fetch_status = 0) begin
+
+    update tblTable
+    set OrderNum = @OrderNum, 
+        Linked = @Linked, 
+        TimeIn = @TimeIn, 
+        ServerID = @ServerID,
+        NumOfGuests = @NumOfGuests, 
+        Opened = @Opened, 
+        TableName = @TableName, 
+        PickupTime = @PickupTime,
+        PhoneNum = @PhoneNum, 
+        PickupPerson = @PickupPerson, 
+        TakeOut = @TakeOut, 
+        DailyOrdNum = @DailyOrdNum,
+        BillPrinted = @BillPrinted, 
+        Attention = @Attention
+    where ID = @NewID
+
+    update tblTableLayout
+    set TableID = @NewID
+    where TableID = @ID
+
+    set @NewID = @NewID + 1
+
+    fetch next from curs_table into @ID, @OrderNum, @Linked, @TimeIn, @ServerID,
+                                    @NumOfGuests, @Opened, @TableName, @PickupTime,
+                                    @PhoneNum, @PickupPerson, @TakeOut, @DailyOrdNum,
+                                    @BillPrinted, @Attention
+  end
+  close curs_table
+deallocate curs_table'
+GO
+
+if exists (select *
+           from tblTable 
+           where ID > 200
+             and TakeOut = 1) begin
+  update tblTable
+  set OrderNum = 0, 
+      Linked = 0, 
+      TimeIn = getdate(), 
+      ServerID = 0,
+      NumOfGuests = 0, 
+      Opened = 0, 
+      TableName = '', 
+      PickupTime = '',
+      PhoneNum = '', 
+      PickupPerson = '', 
+      TakeOut = 0, 
+      DailyOrdNum = 0,
+      BillPrinted = 0, 
+      Attention = 0
+  where TakeOut = 1
+    and ID <= 200
+end
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPaymentType]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPaymentType](
+	[ID] [tinyint] IDENTITY(1,1) NOT NULL,
+	[PaymentType] [varchar](10) NULL,
+ CONSTRAINT [PK_tblPaymentType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblPaymentType) begin
+  insert into tblPaymentType (PaymentType)
+  values (''Cash'')
+  insert into tblPaymentType (PaymentType)
+  values (''Debit'')
+  insert into tblPaymentType (PaymentType)
+  values (''Visa'')
+  insert into tblPaymentType (PaymentType)
+  values (''MC'')
+  insert into tblPaymentType (PaymentType)
+  values (''AMEX'')
+  insert into tblPaymentType (PaymentType)
+  values (''Coupon'')
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPayment]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPayment](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[PaymentTypeID] [tinyint] NOT NULL,
+	[PaidAmount] [smallmoney] NOT NULL,
+	[TipAmount] [smallmoney] NULL,
+	[CardNumber] [varbinary](128) NULL,
+	[CardExpiryDate] [varbinary](128) NULL,
+	[AuthorizationNo] [varchar](20) NULL,
+	[SequenceNo] [varchar](20) NULL,
+	[CardReceipt] [nvarchar](3000) NULL,
+	[Voided] [bit] NOT NULL CONSTRAINT [DF_tblPayment_Voided]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblPayment] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPayment]  WITH CHECK ADD  CONSTRAINT [FK_tblPayment_tblPaymentType] FOREIGN KEY([PaymentTypeID])
+REFERENCES [dbo].[tblPaymentType] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPayment] CHECK CONSTRAINT [FK_tblPayment_tblPaymentType]
+GO
+
+ALTER TABLE [dbo].[tblPayment]  WITH CHECK ADD  CONSTRAINT [FK_tblPayment_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPayment] CHECK CONSTRAINT [FK_tblPayment_tblSales]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_salesid] ON [dbo].[tblPayment] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * 
+               from tblPayment) begin
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 1, s.CashPaid, s.CashTipPaid
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.CashPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 1, 0, s.CashTipPaid
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.CashPaid = 0
+    and s.CashTipPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 2, s.DebitPaid, s.DebitTipPaid
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.DebitPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 2, 0, s.DebitTipPaid
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.DebitPaid = 0
+    and s.DebitTipPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 3, s.VisaPaid, s.CreditTipPaid
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.VisaPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 4, s.McPaid, case when s.VisaPaid <> 0 then 0 else s.CreditTipPaid end
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.McPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 5, s.AmexPaid, case when (s.VisaPaid <> 0) or (s.McPaid <> 0) then 0 else s.CreditTipPaid end
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.AmexPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 3, 0, s.CreditTipPaid
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.VisaPaid = 0
+    and s.DebitPaid = 0
+    and s.AmexPaid = 0
+    and s.CreditTipPaid <> 0
+  order by s.ID
+
+  insert into tblPayment (SalesID, PaymentTypeID, PaidAmount, TipAmount)
+  select s.ID, 6, s.CouponPaid, 0
+  from tblSales s
+  where s.OriginalTransType in (0, 1)
+    and s.CouponPaid <> 0
+  order by s.ID
+
+end'
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_CashPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [CashPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_CouponPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [CouponPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_DebitPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [DebitPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_VisaPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [VisaPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_McPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [McPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_AmexPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [AmexPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_CashTipPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [CashTipPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_DebitTipPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [DebitTipPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_CreditTipPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [CreditTipPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_CreditPaid]
+GO
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [CreditPaid]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [CardType]
+GO
+
+ALTER TABLE [dbo].[tblTable] DROP COLUMN [DailyOrdNum]
+GO
+ALTER TABLE [dbo].[tblTable]
+  ADD    
+    [DailyOrdNum] [int] NOT NULL CONSTRAINT [DF_tblTable_DailyOrdNum]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblConstants]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblConstants](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[TransType] [varchar](20) NOT NULL CONSTRAINT [DF_tblConstants_TransType]  DEFAULT (''),
+	[Code] [char](5) NOT NULL CONSTRAINT [DF_tblConstants_Field]  DEFAULT (''),
+	[Value] [char](10) NOT NULL CONSTRAINT [DF_tblConstants_Value]  DEFAULT (''),
+	[Description] [varchar](100) NOT NULL CONSTRAINT [DF_tblConstants_Description]  DEFAULT (''),
+	[IsError] [bit] NOT NULL CONSTRAINT [DF_tblConstants_IsError]  DEFAULT ((1)),
+ CONSTRAINT [PK_tblConstants] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblConstants where TransType = ''SALE'' and Code = ''RES'' and [Value] = ''z[122]'') begin
+
+  truncate table tblConstants
+
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''0[48]'', ''Declined'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''1[49]'', ''Approved'', 0)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''2[50]'', ''Approved (Offline)'', 0)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''<[60]'', ''Partial Authorization cancelled'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''A[65]'', ''Signature not Accepted'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''C[67]'', ''Invalid Amount'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''E[69]'', ''Invalid Card Expire Date'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''F[70]'', ''Invalid Card'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''G[71]'', ''PINPad operation cancelled'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''H[72]'', ''Invalid Card Number for void'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''I[73]'', ''Invalid Debit Type for void'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''J[74]'', ''Time-out'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''K[75]'', ''PinPad swipe error'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''L[76]'', ''FID is missing'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''M[77]'', ''Stolen/Restricted Card'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''N[78]'', ''Referral'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''O[79]'', ''Invalid Response Message'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''P[80]'', ''Invalid Transaction Type used with defined Business Type'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''Q[81]'', ''PinPad is not ready'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''R[82]'', ''Error injecting keys'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''S[83]'', ''Invalid Track2'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''T[84]'', ''Error generating MAC'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''U[85]'', ''Request is not complete'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''V[86]'', ''Terminal is not initialized'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''W[87]'', ''MAC verification failed'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''X[88]'', ''Floor limit declined'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''Z[90]'', ''Communication error'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''^[94]'', ''Please go to a Service Point (for K800-Kiosk solutions)'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''a[97]'', ''PIN error (Global Payment)'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''b[98]'', ''Sequence error (Global Payment)'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''c[99]'', ''PIN key error (Global Payment)'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''d[100]'', ''Card type does not match'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''e[101]'', ''Transaction exception'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''g[103]'', ''Over Contactless limit'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''h[104]'', ''Swipe cancel'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''i[105]'', ''Swipe timeout'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''j[106]'', ''PINPad security framework error'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''k[107]'', ''Card verification failed'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''l[108]'', ''Tokenization Service not available'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''m[109]'', ''Swipe error on fallback'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''n[110]'', ''No Records in SAF file'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''o[111]'', ''Invalid Input Data'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''p[112]'', ''Declined CVD/CVV'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''q[113]'', ''Declined AVS'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''r[114]'', ''PINPad Lottery busy or Retry (Optimal)'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''s[115]'', ''Authorization not handled by MCM'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''y[121]'', ''Cannot read DTL file - (Detail file corrupted)'', 1)
+  insert into tblConstants (TransType, Code, [Value], [Description], IsError)
+  values (''SALE'', ''RES'', ''z[122]'', ''Cannot process .lku file created (Optimal)'', 1)
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblKitchenOrders]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblKitchenOrders](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[Qty] [tinyint] NOT NULL,
+	[Tastes] [varchar](2000) NOT NULL,
+	[SideDishes] [varchar](200) NOT NULL,
+	[ItemName] [varchar](100) NOT NULL,
+	[ItemName2] [varchar](30) NOT NULL,
+	[ItemNumber] [varchar](15) NOT NULL,
+	[SizeName] [varchar](20) NOT NULL,
+	[KitchenB] [bit] NOT NULL,
+	[KitchenF] [bit] NOT NULL,
+	[KitchenE] [bit] NOT NULL,
+	[Bar] [bit] NOT NULL,
+	[PersonIndex] [tinyint] NOT NULL,
+	[DailyOrderNumber] [int] NOT NULL,
+	[Status] [tinyint] NOT NULL,
+ CONSTRAINT [PK_tblKitchenOrders] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblReadyOrderNumber]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblReadyOrderNumber](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[KitchenOrderID] [int] NOT NULL CONSTRAINT [DF_tblReadyOrderNumber_KitchenOrderID]  DEFAULT ((0)),
+	[OrderNumber] [varchar](20) NOT NULL CONSTRAINT [DF_tblReadyOrderNumber_OrderNumber]  DEFAULT (''),
+	[Source] [char](1) NOT NULL CONSTRAINT [DF_tblReadyOrderNumber_Source]  DEFAULT ('A'),
+ CONSTRAINT [PK_tblReadyOrderNumber] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblReadyOrderNumber]
+  ADD
+    [KitchenOrderID] [int] NOT NULL CONSTRAINT [DF_tblReadyOrderNumber_KitchenOrderID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblUser]
+  ADD
+    [LastClosingTime] [datetime] NULL
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblOrderPrintCue]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblOrderPrintCue](
+	[SalesID] [int] NOT NULL,
+	[PrintDateTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_tblOrderPrintCue] PRIMARY KEY CLUSTERED 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+  update tblTable
+  set TakeOut = case when (Linked = 1 and ((ID > 200 and ID <= 300) or (ID > 1099 and ID <= 1998))) then 1 else 0 end
+'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblDiscountDetail]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblDiscountDetail](
+	[SalesID] [int] NOT NULL,
+	[DSCAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblDiscountDetail_DSCAmt]  DEFAULT ((0)),
+	[DSCAmtEmployee] [smallmoney] NOT NULL CONSTRAINT [DF_tblDiscountDetail_DSCAmtEmployee]  DEFAULT ((0)),
+	[DSCAmtType1] [smallmoney] NOT NULL CONSTRAINT [DF_tblDiscountDetail_DSCAmtType1]  DEFAULT ((0)),
+	[DSCAmtType2] [smallmoney] NOT NULL CONSTRAINT [DF_tblDiscountDetail_DSCAmtType2]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblDiscountDetail] PRIMARY KEY CLUSTERED 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPendingOrdersTemp]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPendingOrdersTemp](
+	[SalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[Qty] [tinyint] NOT NULL,
+	[UnitPrice] [smallmoney] NOT NULL,
+	[Tastes] [varchar](2000) NOT NULL,
+	[SideDishes] [varchar](200) NOT NULL,
+	[ItemName] [varchar](100) NOT NULL,
+	[SizeName] [varchar](20) NOT NULL,
+	[ApplyGST] [bit] NOT NULL,
+	[ApplyPST] [bit] NOT NULL,
+	[DSCAmt] [smallmoney] NOT NULL,
+	[KitchenB] [bit] NOT NULL,
+	[KitchenF] [bit] NOT NULL,
+	[PersonIndex] [tinyint] NOT NULL,
+	[SeparateBillPrint] [bit] NOT NULL,
+	[Bar] [bit] NOT NULL,
+	[ApplyNoDSC] [bit] NOT NULL,
+	[OpenItem] [bit] NOT NULL,
+	[ItemName2] [varchar](30) NOT NULL,
+	[ExtraChargeItem] [bit] NOT NULL,
+	[ApplyPST2] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_ApplyPST2]  DEFAULT ((0)),
+	[KitchenE] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_KitchenE]  DEFAULT ((0)),
+	[DSCAmtEmployee] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_DSCAmtEmployee]  DEFAULT ((0)),
+	[DSCAmtType1] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_DSCAmtType1]  DEFAULT ((0)),
+	[DSCAmtType2] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_DSCAmtType2]  DEFAULT ((0)),
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSize]
+  ADD
+    [OnHandQty] [smallint] NOT NULL CONSTRAINT [DF_tblAvailableSize_OnHandQty]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblInventoryChangeHistory]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblInventoryChangeHistory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[OnHandQty] [smallint] NOT NULL,
+	[AppliedQty] [smallint] NOT NULL,
+	[SalesID] [int] NOT NULL CONSTRAINT [DF_tblInventoryChangeHistory_SalesID]  DEFAULT ((0)),
+	[ChangedDateTime] [smalldatetime] NOT NULL CONSTRAINT [DF_tblInventoryChangeHistory_ChangeDateTime]  DEFAULT (getdate()),
+	[UserID] [smallint] NOT NULL,
+ CONSTRAINT [PK_tblInventoryChangeHistory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblInventoryChangeHistory_tblItem] FOREIGN KEY([ItemID])
+REFERENCES [dbo].[tblItem] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory] CHECK CONSTRAINT [FK_tblInventoryChangeHistory_tblItem]
+GO
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblInventoryChangeHistory_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory] CHECK CONSTRAINT [FK_tblInventoryChangeHistory_tblSize]
+GO
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblInventoryChangeHistory_tblUser] FOREIGN KEY([UserID])
+REFERENCES [dbo].[tblUser] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblInventoryChangeHistory] CHECK CONSTRAINT [FK_tblInventoryChangeHistory_tblUser]
+GO
+
+ALTER TABLE [dbo].[tblUser]
+  ADD
+    [TipOutPercentage] [float] NULL
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [BellNumber] [smallint] NOT NULL CONSTRAINT [DF_tblTable_BellIndex]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [CallType] [tinyint] NOT NULL CONSTRAINT [DF_tblTable_CallType]  DEFAULT ((255))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPointsDetail]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPointsDetail](
+	[SalesID] [int] NOT NULL,
+	[PointUsed] [smallint] NOT NULL CONSTRAINT [DF_tblPointsDetail_PointUsed]  DEFAULT ((0)),
+	[PointSaved] [smallint] NOT NULL CONSTRAINT [DF_tblPointsDetail_PointSaved]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblPointsDetail] PRIMARY KEY CLUSTERED 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPointsDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblPointsDetail_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPointsDetail] CHECK CONSTRAINT [FK_tblPointsDetail_tblSales]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblDeletedItems]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblDeletedItems](
+	[SalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[Qty] [smallint] NOT NULL,
+	[UnitPrice] [smallmoney] NOT NULL,
+	[DeletedDateTime] [smalldatetime] NOT NULL,
+	[UserID] [smallint] NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems]  WITH CHECK ADD  CONSTRAINT [FK_tblDeletedItems_tblItem] FOREIGN KEY([ItemID])
+REFERENCES [dbo].[tblItem] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems] CHECK CONSTRAINT [FK_tblDeletedItems_tblItem]
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems]  WITH CHECK ADD  CONSTRAINT [FK_tblDeletedItems_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems] CHECK CONSTRAINT [FK_tblDeletedItems_tblSales]
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems]  WITH CHECK ADD  CONSTRAINT [FK_tblDeletedItems_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems] CHECK CONSTRAINT [FK_tblDeletedItems_tblSize]
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [Alcohol] [bit] NOT NULL CONSTRAINT [DF_tblItem_Alcohol]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCardReceiptTemplate]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCardReceiptTemplate](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CardReceiptType] [varchar](50) NOT NULL CONSTRAINT [DF_Table_1_ReceiptType]  DEFAULT ((0)),
+	[CardReceipt] [nvarchar](3000) NULL,
+ CONSTRAINT [PK_tblCardReceiptTemplate] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM tblCardReceiptTemplate) BEGIN
+          
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+  insert into tblCardReceiptTemplate (CardReceiptType, CardReceipt)
+  values ('', '')
+
+END
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [BatchNo] [varchar](1) NULL
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [ItemNo] [varchar](3) NULL
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [RevisionNo] [varchar](1) NULL
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [StationName] [varchar](20) NULL
+GO
+
+ALTER TABLE dbo.tblPayment
+  DROP CONSTRAINT DF_tblSales_BatchClosed 
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [BatchClosed] [bit] NOT NULL CONSTRAINT [DF_tblPayment_BatchClosed]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [DayHourDiscountRate] [float] NOT NULL CONSTRAINT [DF_tblPendingOrders_DayHourDiscountRate]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp]
+  ADD
+    [Status] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_Status]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp]
+  ADD
+    [DayHourDiscountRate] [float] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_DayHourDiscountRate]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [HourlyChargedItem] [bit] NOT NULL CONSTRAINT [DF_tblItem_HourlyChargedItem]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblTimeStartEnd]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblTimeStartEnd](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[StartDateTime] [smalldatetime] NOT NULL,
+	[EndDateTime] [smalldatetime] NOT NULL,
+	[Stopped] [bit] NOT NULL,
+ CONSTRAINT [PK_tblTimeStartEnd] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblUserAction]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblUserAction](
+	[ID] [smallint] IDENTITY(1,1) NOT NULL,
+	[ActionDescription] [varchar](50) NOT NULL,
+	[ActionCode] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_tblAction] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblUserAction) begin
+  insert into tblUserAction (ActionDescription, ActionCode)
+  values (''System Log In Success'', ''LOGIN'')
+  insert into tblUserAction (ActionDescription, ActionCode)
+  values (''System Log Out'', ''LOGOUT'')
+  insert into tblUserAction (ActionDescription, ActionCode)
+  values (''System Log In Failure'', ''LOGINFAIL'')
+  insert into tblUserAction (ActionDescription, ActionCode)
+  values (''Exit System'', ''EXIT'')
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblUserLog]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblUserLog](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[LogDateTime] [smalldatetime] NOT NULL,
+	[UserID] [smallint] NOT NULL,
+	[UserActionID] [smallint] NOT NULL,
+ CONSTRAINT [PK_tblUserLog] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblUserLog]  WITH CHECK ADD  CONSTRAINT [FK_tblUserLog_tblUserAction] FOREIGN KEY([UserActionID])
+REFERENCES [dbo].[tblUserAction] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblUserLog] CHECK CONSTRAINT [FK_tblUserLog_tblUserAction]
+GO
+
+ALTER TABLE [dbo].[tblUserLog] 
+  ADD    
+    [StationName] [varchar](50) NOT NULL CONSTRAINT [DF_tblUserLog_StationName]  DEFAULT ('')
+GO
+
+CREATE NONCLUSTERED INDEX [idx_SalesID] ON [dbo].[tblPendingOrders] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_CustomerID] ON [dbo].[tblSales] 
+(
+	[CustomerID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_CustomerNum] ON [dbo].[tblCustomer] 
+(
+	[CustomerNum] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [Status] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrders_Status]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCheckedOrders]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCheckedOrders](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[Qty] [tinyint] NOT NULL,
+	[DeletedQty] [tinyint] NOT NULL,
+	[Tastes] [varchar](2000) NOT NULL,
+	[ItemName] [varchar](100) NOT NULL,
+	[SizeName] [varchar](20) NOT NULL,
+	[PersonIndex] [tinyint] NOT NULL,
+	[Status] [bit] NOT NULL,
+ CONSTRAINT [PK_tblCheckedOrders] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblStation]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblStation](
+	[ID] [smallint] IDENTITY(1,1) NOT NULL,
+	[StationName] [varchar](30) NOT NULL,
+	[Status] [bit] NOT NULL CONSTRAINT [DF_tblStation_Status]  DEFAULT ((1)),
+ CONSTRAINT [PK_tblStation] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+if not exists (select * from tblStation) begin
+  insert into tblStation (StationName, [Status])
+  values ('POS1', 1)
+end
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [StationID] [smallint] NOT NULL CONSTRAINT [DF_tblSales_StationID]  DEFAULT ((1))
+GO
+
+ALTER TABLE [dbo].[tblSales]  WITH CHECK ADD  CONSTRAINT [FK_tblSales_tblStation] FOREIGN KEY([StationID])
+REFERENCES [dbo].[tblStation] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblSales] CHECK CONSTRAINT [FK_tblSales_tblStation]
+GO
+
+
+
+ALTER TABLE [dbo].[tblPayment] 
+  ADD    
+    [TrackData] [varbinary](128) NULL
+GO
+
+ALTER TABLE [dbo].[tblStation]
+  ADD
+    [LastClosingTime] [datetime] NULL
+GO
+
+ALTER TABLE [dbo].[tblCustomer]
+  ADD  
+    [CustomerNote] [varchar](255) NULL
+GO
+
+ALTER TABLE [dbo].[tblCustomer] 
+  ADD
+    [CreditBalance] [smallmoney] NULL
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD
+    [ScaleItem] [bit] NOT NULL CONSTRAINT [DF_tblItem_ScaleItem]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [ScaleItem] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_ScaleItem]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSize]
+  ADD
+    [DisplayOrder] [smallint] NOT NULL CONSTRAINT [DF_tblSize_DisplayOrder]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ALTER COLUMN [TableName] varchar(50)
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] 
+  ALTER COLUMN [Qty] smallint
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] 
+  ALTER COLUMN [Qty] smallint
+GO
+
+ALTER TABLE [dbo].[tblCheckedOrders] 
+  ALTER COLUMN [Qty] smallint
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders] 
+  ALTER COLUMN [Qty] smallint
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [AlcoholDSCAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblSales_AlcoholDSCAmt]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [TipAdjusted] [bit] NULL CONSTRAINT [DF_tblPayment_TipAdjusted]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [HourDollarDSC] [bit] NOT NULL CONSTRAINT [DF_tblItem_HourDollarDSC]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_TroutD]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [TroutD]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_PreAuth]
+GO
+
+ALTER TABLE [dbo].[tblSales] DROP COLUMN [PreAuth]
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [CustomerTypeID] [tinyint] NOT NULL CONSTRAINT [DF_tblSales_CustomerTypeID]  DEFAULT ((1))
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [CustomerGroupID] [tinyint] NOT NULL CONSTRAINT [DF_tblSales_CustomerGroupID]  DEFAULT ((1))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCustomerType]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCustomerType](
+	[ID] [tinyint] IDENTITY(1,1) NOT NULL,
+	[CustomerType] [varchar](50) NULL,
+ CONSTRAINT [PK_tblCustomerType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCustomerGroup]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCustomerGroup](
+	[ID] [tinyint] IDENTITY(1,1) NOT NULL,
+	[CustomerGroup] [varchar](50) NULL,
+ CONSTRAINT [PK_tblCustomerGroup] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblCustomerType) begin
+  truncate table tblCustomerType
+
+  insert into tblCustomerType (CustomerType)
+  values (''Others'')
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblCustomerGroup) begin
+  truncate table tblCustomerGroup
+
+  insert into tblCustomerGroup (CustomerGroup)
+  values (''Others'')
+end'
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD   
+    [Delivery] [bit] NOT NULL CONSTRAINT [DF_tblTable_Delivery]  DEFAULT ((0)),
+    [Online] [bit] NOT NULL CONSTRAINT [DF_tblTable_Online]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblEmployeeWageHistory]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblEmployeeWageHistory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[EmployeeID] [smallint] NOT NULL,
+	[EffectiveDate] [smalldatetime] NOT NULL,
+	[Wage] [smallmoney] NOT NULL,
+ CONSTRAINT [PK_tblEmployeeWageHistory] PRIMARY KEY CLUSTERED 
+(
+	[EmployeeID] ASC,
+	[EffectiveDate] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblUser] 
+  ADD    
+    [SystemUser] [bit] NOT NULL CONSTRAINT [DF_tblUser_SystemUser]  DEFAULT ((1))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblClosingReportDateTime]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblClosingReportDateTime](
+	[ClosingReportCode] [varchar](5) NOT NULL,
+	[ReportDescription] [varchar](50) NOT NULL,
+	[FromDateTime] [datetime] NOT NULL,
+	[ToDateTime] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblClosingReportDateTime) begin
+  truncate table tblClosingReportDateTime
+
+  insert into tblClosingReportDateTime(ClosingReportCode, ReportDescription, FromDateTime, ToDateTime)
+  values (''HCR'', ''Half Day Closing Report'', getdate(), getdate())
+
+  insert into tblClosingReportDateTime(ClosingReportCode, ReportDescription, FromDateTime, ToDateTime)
+  values (''ECR'', ''Employee Closing Report'', getdate(), getdate())
+
+  insert into tblClosingReportDateTime(ClosingReportCode, ReportDescription, FromDateTime, ToDateTime)
+  values (''SCR'', ''Station Closing Report'', getdate(), getdate())
+end'
+GO
+
+ALTER TABLE [dbo].[tblSalesDetail] 
+  ADD    
+    [Voided] [bit] NOT NULL CONSTRAINT [DF_tblSalesDetail_Voided]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [PST2Amt] [smallmoney] NOT NULL CONSTRAINT [DF_tblSales_PST2Amt]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [PST2Rate] [float] NOT NULL CONSTRAINT [DF_tblSales_PST2Rate]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblStation]
+  ADD
+    [KitchenDisplay] [bit] NOT NULL CONSTRAINT [DF_tblStation_KitchenDisplay]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders]
+  ADD
+    [StationID] [smallint] NOT NULL CONSTRAINT [DF_tblKitchenOrders_StationID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblDeletedItems]
+  ADD
+    [DeleteReason] [varchar](200) NULL
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [OnlineItem] [bit] NOT NULL CONSTRAINT [DF_tblItem_OnlineItem]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [ItemDescription] [varchar](2000) NULL,
+    [ImageFilePath] [varchar](200) NULL
+GO
+
+ALTER TABLE [dbo].[tblCategory]
+  ADD    
+    [CategoryImageFilePath] [varchar](200) NULL
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblStore]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblStore](
+	[ID] [smallint] IDENTITY(1,1) NOT NULL,
+	[StoreName] [varchar](50) NOT NULL,
+	[StoreCode] [varchar](20) NOT NULL,
+	[Status] [bit] NOT NULL CONSTRAINT [DF_tblStore_Status]  DEFAULT ((1)),
+	[MerchantNumber] [varchar](20) NULL,
+	[LinkedServerName] [varchar](100) NULL,
+ CONSTRAINT [PK_tblStore] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders]
+  ADD    
+    [PickupTime] [varchar](8) NOT NULL CONSTRAINT [DF_tblKitchenOrders_PickupTime]  DEFAULT ('')
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+--if not exists (select *
+--               from tblTable
+--               where ID > 300) begin
+
+--  declare @i int
+
+--  set @i = 1
+
+--  while @i <= 799 begin
+
+--    insert into tblTable (OrderNum, Linked, TimeIn, ServerID, NumOfGuests, Opened, TableName, PickupTime,
+--                          PhoneNum, PickupPerson, TakeOut, BillPrinted, Attention, DailyOrdNum, BellNumber,
+--                          CallType, Delivery, [Online])
+--    values (0, 0, getdate(), 0, 0, 0, '''', '''', '''', '''', 0, 0, 0, 0, 0, 255, 0, 0)
+
+--    set @i = @i + 1
+
+--  end
+
+--end
+'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCredit]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCredit](
+	[SalesID] [int] NOT NULL,
+	[CreditValue] [smallmoney] NOT NULL,
+	[Received] [bit] NOT NULL,
+	[DateRecorded] [datetime] NOT NULL,
+	[CustomerID] [int] NOT NULL CONSTRAINT [DF_tblCredit_CustomerID]  DEFAULT ((1))
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblCredit]  WITH CHECK ADD  CONSTRAINT [FK_tblCredit_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblCredit] CHECK CONSTRAINT [FK_tblCredit_tblSales]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblBillCollectHistory]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblBillCollectHistory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[StationID] [smallint] NOT NULL,
+	[CashierID] [smallint] NOT NULL,
+	[CustomerID] [int] NOT NULL CONSTRAINT [DF_tblBillCollectHistory_CustomerID]  DEFAULT ((1)),
+	[BillCollectDate] [smalldatetime] NOT NULL,
+	[BillCollectAmt] [smallmoney] NOT NULL,
+ CONSTRAINT [PK_tblBillCollectHistory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblBillCollectHistory_tblCustomer] FOREIGN KEY([CustomerID])
+REFERENCES [dbo].[tblCustomer] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory] CHECK CONSTRAINT [FK_tblBillCollectHistory_tblCustomer]
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblBillCollectHistory_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory] CHECK CONSTRAINT [FK_tblBillCollectHistory_tblSales]
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblBillCollectHistory_tblStation] FOREIGN KEY([StationID])
+REFERENCES [dbo].[tblStation] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory] CHECK CONSTRAINT [FK_tblBillCollectHistory_tblStation]
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory]  WITH CHECK ADD  CONSTRAINT [FK_tblBillCollectHistory_tblUser] FOREIGN KEY([CashierID])
+REFERENCES [dbo].[tblUser] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblBillCollectHistory] CHECK CONSTRAINT [FK_tblBillCollectHistory_tblUser]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblDayHourDiscount]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblDayHourDiscount](
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[WeekDayIndex] [tinyint] NOT NULL,
+	[ApplyDay] [bit] NOT NULL,
+	[ApplyDayRate] [bit] NOT NULL,
+	[ApplyDayPrice] [bit] NOT NULL,
+	[ApplyHour] [bit] NOT NULL,
+	[ApplyHourRate] [bit] NOT NULL,
+	[ApplyHourPrice] [bit] NOT NULL,
+	[DayRate] [float] NOT NULL,
+	[DayPrice] [smallmoney] NOT NULL CONSTRAINT [DF_tblDayHourDiscount_DayPrice]  DEFAULT ((0)),
+	[HourFrom] [smallint] NOT NULL,
+	[HourTo] [smallint] NOT NULL,
+	[HourRate] [float] NOT NULL,
+	[HourPrice] [smallmoney] NOT NULL,
+ CONSTRAINT [PK_tblDayHourDiscount] PRIMARY KEY CLUSTERED 
+(
+	[ItemID] ASC,
+	[SizeID] ASC,
+	[WeekDayIndex] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblDayHourDiscount]  WITH CHECK ADD  CONSTRAINT [FK_tblDayHourDiscount_tblItem] FOREIGN KEY([ItemID])
+REFERENCES [dbo].[tblItem] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDayHourDiscount] CHECK CONSTRAINT [FK_tblDayHourDiscount_tblItem]
+GO
+
+ALTER TABLE [dbo].[tblDayHourDiscount]  WITH CHECK ADD  CONSTRAINT [FK_tblDayHourDiscount_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDayHourDiscount] CHECK CONSTRAINT [FK_tblDayHourDiscount_tblSize]
+GO
+
+DROP TABLE [dbo].[tblHourDiscount]
+GO
+
+DROP TABLE [dbo].[tblItemDiscount]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSize] DROP CONSTRAINT [DF_tblAvailableSize_HourDSCPrice]
+GO
+ALTER TABLE [dbo].[tblAvailableSize] DROP COLUMN [HourDSCPrice]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSize]
+  ADD
+    [ApplyNoDSC] [bit] NOT NULL CONSTRAINT [DF_tblAvailableSize_ApplyNoDSC]  DEFAULT ((1))
+GO
+
+ALTER TABLE [dbo].[tblItem] DROP CONSTRAINT [DF_tblItem_ApplyDSC]
+GO
+ALTER TABLE [dbo].[tblItem] DROP COLUMN [ApplyDSC]
+GO
+
+ALTER TABLE [dbo].[tblItem] DROP CONSTRAINT [DF_tblItem_DailyDSC]
+GO
+ALTER TABLE [dbo].[tblItem] DROP COLUMN [DailyDSC]
+GO
+
+ALTER TABLE [dbo].[tblItem] DROP CONSTRAINT [DF_tblItem_HourDSC]
+GO
+ALTER TABLE [dbo].[tblItem] DROP COLUMN [HourDSC]
+GO
+
+ALTER TABLE [dbo].[tblItem] DROP CONSTRAINT [DF_tblItem_HourDollarDSC]
+GO
+ALTER TABLE [dbo].[tblItem] DROP COLUMN [HourDollarDSC]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] DROP CONSTRAINT [DF_tblPendingOrders_IsOut]
+GO
+ALTER TABLE [dbo].[tblPendingOrders] DROP COLUMN [IsOut]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] DROP CONSTRAINT [DF_tblPendingOrders_DailyDSC]
+GO
+ALTER TABLE [dbo].[tblPendingOrders] DROP COLUMN [DailyDSC]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] DROP CONSTRAINT [DF_tblPendingOrders_DailyDSCRate]
+GO
+ALTER TABLE [dbo].[tblPendingOrders] DROP COLUMN [DailyDSCRate]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] DROP CONSTRAINT [DF_tblPendingOrders_HourDSC]
+GO
+ALTER TABLE [dbo].[tblPendingOrders] DROP COLUMN [HourDSC]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] DROP CONSTRAINT [DF_tblPendingOrders_HourDSCRate]
+GO
+ALTER TABLE [dbo].[tblPendingOrders] DROP COLUMN [HourDSCRate]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP CONSTRAINT [DF_tblPendingOrdersTemp_IsOut]
+GO
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP COLUMN [IsOut]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP CONSTRAINT [DF_tblPendingOrdersTemp_DailyDSC]
+GO
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP COLUMN [DailyDSC]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP CONSTRAINT [DF_tblPendingOrdersTemp_DailyDSCRate]
+GO
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP COLUMN [DailyDSCRate]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP CONSTRAINT [DF_tblPendingOrdersTemp_HourDSC]
+GO
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP COLUMN [HourDSC]
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP CONSTRAINT [DF_tblPendingOrdersTemp_HourDSCRate]
+GO
+ALTER TABLE [dbo].[tblPendingOrdersTemp] DROP COLUMN [HourDSCRate]
+GO
+
+exec sp_rename
+    @objname = 'tblPendingOrders.ApplyDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+GO
+
+exec sp_rename
+    @objname = 'tblPendingOrdersTemp.ApplyDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+GO
+
+exec sp_rename
+    @objname = 'tblPendingOrders.ApplyGeneralDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+GO
+
+exec sp_rename
+    @objname = 'tblPendingOrdersTemp.ApplyGeneralDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [TasteModifier] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_TasteModifier]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [NextItemID] [smallint] NOT NULL CONSTRAINT [DF_tblMenuLayout_NextControlIndex]  DEFAULT ((0)),
+    [NextItemName] [varchar](30) NOT NULL CONSTRAINT [DF_tblMenuLayout_NextItemName]  DEFAULT ('')
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [StayOn] [bit] NOT NULL CONSTRAINT [DF_tblTable_StayOn]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblTipAmountInBill]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblTipAmountInBill](
+	[SalesID] [int] NOT NULL,
+	[PersonIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblTipAmountInBill_PersonIndex]  DEFAULT ((0)),
+	[IncludedTipAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblTipAmountInBill_IncludedTipAmt]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblTipAmountInBill] PRIMARY KEY CLUSTERED 
+(
+	[SalesID] ASC,
+	[PersonIndex] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout] DROP CONSTRAINT [DF_tblMenuLayout_TabIndex]
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout] ALTER COLUMN [TabIndex] [smallint] NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout] ADD  CONSTRAINT [DF_tblMenuLayout_TabIndex]  DEFAULT ((0)) FOR [TabIndex]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblSizeGroup]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblSizeGroup](
+	[ID] [tinyint] IDENTITY(1,1) NOT NULL,
+	[SizeGroupName] [varchar](30) NULL,
+ CONSTRAINT [PK_tblSizeGroup] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblSize]
+  ADD
+    [SizeGroupID] [tinyint] NOT NULL CONSTRAINT [DF_tblSize_SizeGroupID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPaymentType] ALTER COLUMN [PaymentType] [varchar](20) NOT NULL
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblPaymentType where PaymentType = ''Discover'') begin
+  insert into tblPaymentType (PaymentType)
+  values (''Discover'')
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblPaymentType where PaymentType = ''JCB'') begin
+  insert into tblPaymentType (PaymentType)
+  values (''JCB'')
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblPaymentType where PaymentType = ''Gift Card'') begin
+  insert into tblPaymentType (PaymentType)
+  values (''Gift Card'')
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblPaymentType where PaymentType = ''Reward Point'') begin
+  insert into tblPaymentType (PaymentType)
+  values (''Reward Point'')
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select * from tblPaymentType where PaymentType = ''Charge On Account'') begin
+  insert into tblPaymentType (PaymentType)
+  values (''Charge On Account'')
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblBillPrintQueue]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblBillPrintQueue](
+	[StationName] [varchar](30) NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[PrinterName] [varchar](200) NOT NULL CONSTRAINT [DF_tblBillPrintQueue_PrinterName]  DEFAULT (''),
+	[BillPrintType] [tinyint] NOT NULL CONSTRAINT [DF_tblBillPrintQueue_BillPrintType]  DEFAULT ((1)),
+ CONSTRAINT [PK_tblBillPrintCue] PRIMARY KEY CLUSTERED 
+(
+	[StationName] ASC,
+	[SalesID] ASC,
+	[PrinterName] ASC,
+	[BillPrintType] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [RewardItem] [bit] NOT NULL CONSTRAINT [DF_tblItem_RewardItem]  DEFAULT ((1))
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders]
+  ADD    
+    [InsertedDateTime] [datetime] NOT NULL CONSTRAINT [DF_tblKitchenOrders_InsertedDateTime]  DEFAULT ((getdate()))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD    
+    [GroupItem] [bit] NOT NULL CONSTRAINT [DF_tblItem_GroupItem]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [GroupItem] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_GroupItem]  DEFAULT ((0))
+GO
+
+DROP TABLE [dbo].[tmpMenuLayoutBackup]
+GO
+
+DROP TABLE [dbo].[tmpTableLayoutBackup]
+GO
+
+ALTER TABLE [dbo].[tblSize] ALTER COLUMN [SizeName] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders] ALTER COLUMN [SizeName] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] ALTER COLUMN [SizeName] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] ALTER COLUMN [SizeName] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblCheckedOrders] ALTER COLUMN [SizeName] [varchar](30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblMisc] DROP CONSTRAINT [PK_tblMisc]
+GO
+
+ALTER TABLE [dbo].[tblMisc] ALTER COLUMN [ID] smallint
+GO
+
+ALTER TABLE [dbo].[tblMisc] ADD  CONSTRAINT [PK_tblMisc] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblSalesDetail]
+  ADD
+    [PricePerWeightUnit] [smallmoney] NOT NULL CONSTRAINT [DF_tblSalesDetail_PricePerWeightUnit]  DEFAULT ((0)),
+    [MeasuredWeight] [float] NOT NULL CONSTRAINT [DF_tblSalesDetail_MeasuredWeight]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [PricePerWeightUnit] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrders_PricePerWeightUnit]  DEFAULT ((0)),
+    [MeasuredWeight] [float] NOT NULL CONSTRAINT [DF_tblPendingOrders_MeasuredWeight]  DEFAULT ((0))
+GO
+
+ALTER TABLE dbo.tblSalesDetail
+  DROP CONSTRAINT PK_tblSalesDetail
+GO
+
+CREATE NONCLUSTERED INDEX [idx_SalesDetail] ON [dbo].[tblSalesDetail] 
+(
+        [SalesID] ASC,
+	[ItemID] ASC,
+	[SizeID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_SalesID] ON [dbo].[tblSalesDetail] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_Item] ON [dbo].[tblSalesDetail] 
+(
+	[ItemID] ASC,
+	[SizeID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblMemo]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblMemo](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Memo] [text] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblSalesDetail]
+  ADD
+    [DecimalPlaces] [tinyint] NOT NULL CONSTRAINT [DF_tblSalesDetail_DecimalPlaces]  DEFAULT ((0)),
+    [DiscountAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblSalesDetail_DiscountAmt]  DEFAULT ((0)),
+    [DiscountPercent] [float] NOT NULL CONSTRAINT [DF_tblSalesDetail_DiscountPercent]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [DecimalPlaces] [tinyint] NOT NULL CONSTRAINT [DF_tblPendingOrders_DecimalPlaces]  DEFAULT ((0)),
+    [DiscountPercent] [float] NOT NULL CONSTRAINT [DF_tblPendingOrders_DiscountPercent]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblErrorLog]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblErrorLog](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ErrorDateTime] [smalldatetime] NULL,
+	[ErrorDescription] [varchar](3000) NULL,
+	[ErrorStoredProcedureName] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tmpMasterItemList]') AND type in (N'U'))
+CREATE TABLE [dbo].[tmpMasterItemList](
+	[BusinessCategory] [varchar](50) NOT NULL CONSTRAINT [DF_tmpMasterItemList_BusinessCategory]  DEFAULT (''),
+	[ItemName] [varchar](30) NOT NULL CONSTRAINT [DF_tmpMasterItemList_ItemName]  DEFAULT (''),
+	[ItemName2] [varchar](30) NOT NULL CONSTRAINT [DF_tmpMasterItemList_ItemName2]  DEFAULT (''),
+	[Tax1] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Tax1]  DEFAULT ((0)),
+	[Tax2] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Tax2]  DEFAULT ((0)),
+	[Tax3] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Tax3]  DEFAULT ((0)),
+	[Back] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Back]  DEFAULT ((0)),
+	[Front] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Front]  DEFAULT ((0)),
+	[Front2] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Front2]  DEFAULT ((0)),
+	[Bar] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Bar]  DEFAULT ((0)),
+	[Taste] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Taste]  DEFAULT ((0)),
+	[Alcohol] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_Alcohol]  DEFAULT ((0)),
+	[OpenItem] [bit] NOT NULL CONSTRAINT [DF_tmpMasterItemList_OpenItem]  DEFAULT ((0))
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPreAuthorizedCardTrans]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPreAuthorizedCardTrans](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[TableID] [smallint] NOT NULL,
+	[SalesID] [int] NOT NULL,
+	[PaymentTypeID] [tinyint] NOT NULL,
+	[PreAuthorizedAmount] [smallmoney] NOT NULL,
+	[CardNumber] [varbinary](128) NULL,
+	[CardExpiryDate] [varbinary](128) NULL,
+	[AuthorizationNo] [varchar](20) NULL,
+	[SequenceNo] [varchar](20) NULL,
+	[CardReceipt] [nvarchar](3000) NULL,
+	[Voided] [bit] NOT NULL CONSTRAINT [DF_tblPreAuthorizedCardTrans_Voided]  DEFAULT ((0)),
+	[StationName] [varchar](20) NOT NULL,
+	[BatchClosed] [bit] NOT NULL CONSTRAINT [DF_tblPreAuthorizedCardTrans_BatchClosed]  DEFAULT ((0)),
+	[TrackData] [varbinary](128) NULL,
+	[CardholderName] [varchar](100) NOT NULL CONSTRAINT [DF_tblPreAuthorizedCardTrans_CustomerName]  DEFAULT (''),
+ CONSTRAINT [PK_tblPreAuthorizedCardTrans] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans]  WITH CHECK ADD  CONSTRAINT [FK_tblPreAuthorizedCardTrans_tblPaymentType] FOREIGN KEY([PaymentTypeID])
+REFERENCES [dbo].[tblPaymentType] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans] CHECK CONSTRAINT [FK_tblPreAuthorizedCardTrans_tblPaymentType]
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans]  WITH CHECK ADD  CONSTRAINT [FK_tblPreAuthorizedCardTrans_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans] CHECK CONSTRAINT [FK_tblPreAuthorizedCardTrans_tblSales]
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans]  WITH CHECK ADD  CONSTRAINT [FK_tblPreAuthorizedCardTrans_tblTable] FOREIGN KEY([TableID])
+REFERENCES [dbo].[tblTable] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans] CHECK CONSTRAINT [FK_tblPreAuthorizedCardTrans_tblTable]
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardChargeHistory]
+  ADD
+    [SalesID] [int] NOT NULL CONSTRAINT [DF_tblPrepaidCardChargeHistory_SalesID]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblPendingOrdersBackup]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblPendingOrdersBackup](
+	[SalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[Qty] [smallint] NULL,
+	[UnitPrice] [smallmoney] NOT NULL,
+	[Tastes] [varchar](2000) NOT NULL,
+	[SideDishes] [varchar](200) NOT NULL,
+	[ItemName] [varchar](100) NOT NULL,
+	[SizeName] [varchar](30) NOT NULL,
+	[ApplyGST] [bit] NOT NULL,
+	[ApplyPST] [bit] NOT NULL,
+	[DSCAmt] [smallmoney] NOT NULL,
+	[KitchenB] [bit] NOT NULL,
+	[KitchenF] [bit] NOT NULL,
+	[PersonIndex] [tinyint] NOT NULL,
+	[SeparateBillPrint] [bit] NOT NULL,
+	[Bar] [bit] NOT NULL,
+	[ApplyNoDSC] [bit] NOT NULL,
+	[OpenItem] [bit] NOT NULL,
+	[ItemName2] [varchar](30) NOT NULL,
+	[ExtraChargeItem] [bit] NOT NULL,
+	[ApplyPST2] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_ApplyPST2]  DEFAULT ((0)),
+	[KitchenE] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_KitchenE]  DEFAULT ((0)),
+	[DSCAmtEmployee] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_DSCAmtEmployee]  DEFAULT ((0)),
+	[DSCAmtType1] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_DSCAmtType1]  DEFAULT ((0)),
+	[DSCAmtType2] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_DSCAmtType2]  DEFAULT ((0)),
+	[Status] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_Status]  DEFAULT ((0)),
+	[DayHourDiscountRate] [float] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_DayHourDiscountRate]  DEFAULT ((0)),
+	[PricePerWeightUnit] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_PricePerWeightUnit]  DEFAULT ((0)),
+	[MeasuredWeight] [float] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_MeasuredWeight]  DEFAULT ((0)),
+	[DecimalPlaces] [tinyint] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_DecimalPlaces]  DEFAULT ((0)),
+	[DiscountPercent] [float] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_DiscountPercent]  DEFAULT ((0))
+) ON [PRIMARY]
+GO
+
+exec sp_rename
+    @objname = 'tblPendingOrdersBackup.ApplyDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+GO
+
+exec sp_rename
+    @objname = 'tblPendingOrdersBackup.ApplyGeneralDSC',
+    @newname = 'ApplyNoDSC',
+    @objtype = 'COLUMN'
+GO
+
+
+ALTER TABLE [dbo].[tblMemo]
+  ADD
+    [MemoDate] [smalldatetime] NULL
+GO
+
+if exists (select * 
+           from tblMemo 
+           where MemoDate is null) begin
+  update tblMemo 
+  set MemoDate = convert(varchar, getdate(), 112)
+  where MemoDate is null
+end
+GO
+
+ALTER TABLE [dbo].[tblSalesDetail]
+  ADD
+    [Tastes] [varchar](2000) NULL
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD   
+    [PickupDate] [smalldatetime] NULL
+GO
+
+ALTER TABLE [dbo].[tblPayOut]
+  ADD   
+    [StationID] [smallint] NOT NULL CONSTRAINT [DF_tblPayOut_StationID_1]  DEFAULT ((1))
+GO
+
+IF NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblSize' 
+                 and COLUMN_NAME = 'DisplayOrder'
+                 and DATA_TYPE = 'smallint') BEGIN
+
+  ALTER TABLE [dbo].[tblSize] DROP CONSTRAINT [DF_tblSize_DisplayOrder]
+
+  ALTER TABLE [dbo].[tblSize] ALTER COLUMN [DisplayOrder] smallint
+
+  ALTER TABLE [dbo].[tblSize] ADD  CONSTRAINT [DF_tblSize_DisplayOrder]  DEFAULT ((0)) FOR [DisplayOrder]
+
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblDeletedUnsavedItems]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblDeletedUnsavedItems](
+	[LastSalesID] [int] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[Qty] [smallint] NOT NULL,
+	[UnitPrice] [smallmoney] NOT NULL,
+	[DeletedDateTime] [smalldatetime] NOT NULL,
+	[UserID] [smallint] NOT NULL,
+	[DeleteReason] [varchar](200) NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblDeletedUnsavedItems]  WITH CHECK ADD  CONSTRAINT [FK_tblDeletedUnsavedItems_tblItem] FOREIGN KEY([ItemID])
+REFERENCES [dbo].[tblItem] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDeletedUnsavedItems] CHECK CONSTRAINT [FK_tblDeletedUnsavedItems_tblItem]
+GO
+
+ALTER TABLE [dbo].[tblDeletedUnsavedItems]  WITH CHECK ADD  CONSTRAINT [FK_tblDeletedUnsavedItems_tblSize] FOREIGN KEY([SizeID])
+REFERENCES [dbo].[tblSize] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblDeletedUnsavedItems] CHECK CONSTRAINT [FK_tblDeletedUnsavedItems_tblSize]
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD
+    [Kitchen5] [bit] NOT NULL CONSTRAINT [DF_tblItem_Kitchen5]  DEFAULT ((0)),
+    [Kitchen6] [bit] NOT NULL CONSTRAINT [DF_tblItem_Kitchen6]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders]
+  ADD
+    [Kitchen5] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrders_Kitchen5]  DEFAULT ((0)),
+    [Kitchen6] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrders_Kitchen6]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersBackup]
+  ADD
+    [Kitchen5] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_Kitchen5]  DEFAULT ((0)),
+    [Kitchen6] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersBackup_Kitchen6]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp]
+  ADD
+    [PricePerWeightUnit] [smallmoney] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_PricePerWeightUnit]  DEFAULT ((0)),
+    [MeasuredWeight] [float] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_MeasuredWeight]  DEFAULT ((0)),
+    [DecimalPlaces] [tinyint] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_DecimalPlaces]  DEFAULT ((0)),
+    [DiscountPercent] [float] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_DiscountPercent]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp]
+  ADD
+    [Kitchen5] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_Kitchen5]  DEFAULT ((0)),
+    [Kitchen6] [bit] NOT NULL CONSTRAINT [DF_tblPendingOrdersTemp_Kitchen6]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders]
+  ADD
+    [Kitchen5] [bit] NOT NULL CONSTRAINT [DF_tblKitchenOrders_Kitchen5]  DEFAULT ((0)),
+    [Kitchen6] [bit] NOT NULL CONSTRAINT [DF_tblKitchenOrders_Kitchen6]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout] ALTER COLUMN [Caption] [varchar](200) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblTableLayout] ALTER COLUMN [Caption] [varchar](200) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD
+    [ItemImage] [image] NULL,
+    [ItemImageFileType] [varchar](5) NULL
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [ItemImage] [image] NULL,
+    [ItemImageFileType] [varchar](5) NULL
+GO
+
+ALTER TABLE [dbo].[tblTableLayout]
+  ADD
+    [TableImage] [image] NULL,
+    [TableImageFileType] [varchar](5) NULL
+GO 
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblAdImages]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblAdImages](
+	[ID] [smallint] IDENTITY(1,1) NOT NULL,
+	[AdImageFileName] [varchar](100) NOT NULL,
+	[AdImage] [image] NULL,
+	[AdImageFileType] [varchar](5) NULL,
+	[Status] [bit] NOT NULL,
+ CONSTRAINT [PK_tblAdImages] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblAdImages] ADD  CONSTRAINT [DF_tblAdImages_AdImageName]  DEFAULT ('') FOR [AdImageFileName]
+GO
+
+ALTER TABLE [dbo].[tblAdImages] ADD  CONSTRAINT [DF_tblAdImages_Status]  DEFAULT ((1)) FOR [Status]
+GO
+
+IF NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblPointsDetail' 
+                 and COLUMN_NAME in ('PointUsed', 'PointSaved')
+                 and DATA_TYPE = 'int') BEGIN
+
+ALTER TABLE [dbo].[tblPointsDetail] DROP CONSTRAINT [DF_tblPointsDetail_PointSaved]
+
+ALTER TABLE [dbo].[tblPointsDetail] DROP CONSTRAINT [DF_tblPointsDetail_PointUsed]
+
+ALTER TABLE [dbo].[tblPointsDetail] ALTER COLUMN [PointSaved] [int] NOT NULL
+
+ALTER TABLE [dbo].[tblPointsDetail] ALTER COLUMN [PointUsed] [int] NOT NULL
+
+ALTER TABLE [dbo].[tblPointsDetail] ADD CONSTRAINT [DF_tblPointsDetail_PointSaved]  DEFAULT ((0)) FOR [PointSaved]
+
+ALTER TABLE [dbo].[tblPointsDetail] ADD CONSTRAINT [DF_tblPointsDetail_PointUsed]  DEFAULT ((0)) FOR [PointUsed]
+
+END
+GO
+
+IF NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblCustomer' 
+                 and COLUMN_NAME in ('EarnedPoints')
+                 and DATA_TYPE = 'int') BEGIN
+
+ALTER TABLE [dbo].[tblCustomer] DROP CONSTRAINT [DF_tblCustomer_EarnedPoints]
+
+ALTER TABLE [dbo].[tblCustomer] ALTER COLUMN [EarnedPoints] [int] NOT NULL
+
+ALTER TABLE [dbo].[tblCustomer] ADD CONSTRAINT [DF_tblCustomer_EarnedPoints]  DEFAULT ((0)) FOR [EarnedPoints]
+
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblOnlineOrders]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblOnlineOrders](
+	[OrderID] [int] NOT NULL,
+	[OrderType] [varchar](100) NOT NULL,
+	[FirstName] [varchar](100) NULL,
+	[LastName] [varchar](100) NULL,
+	[PhoneNum] [varchar](50) NULL,
+	[EmailAddress] [varchar](100) NULL,
+	[UserComments] [varchar](4000) NULL,
+	[DeliveryCompanyName] [varchar](100) NULL,
+	[DeliveryLocationName] [varchar](100) NULL,
+	[DeliveryLine1] [varchar](100) NULL,
+	[DeliveryLine2] [varchar](100) NULL,
+	[DeliveryCity] [varchar](50) NULL,
+	[DeliveryState] [varchar](50) NULL,
+	[DeliveryZipCode] [varchar](50) NULL,
+	[DeliveryComments] [varchar](4000) NULL,
+	[SubTotal] [smallmoney] NOT NULL,
+	[Tax] [smallmoney] NOT NULL,
+	[CouponName] [varchar](100) NULL,
+	[Discount] [smallmoney] NULL,
+	[DeliveryCharge] [smallmoney] NULL,
+	[Total] [smallmoney] NOT NULL,
+	[PaymentType] [varchar](100) NOT NULL,
+	[PaymentStatus] [varchar](100) NOT NULL,
+	[CreateDateTime] [smalldatetime] NOT NULL,
+	[RequestedDateTime] [smalldatetime] NOT NULL,
+	[Status] [bit] NOT NULL,
+ CONSTRAINT [PK_tblOnlineOrders] PRIMARY KEY CLUSTERED 
+(
+	[OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblOnlineOrderDetail]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblOnlineOrderDetail](
+	[OrderID] [int] NOT NULL,
+	[ItemType] [bit] NOT NULL,
+	[ItemIndex] [smallint] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[ItemSizeID] [smallint] NOT NULL,
+	[ItemName] [varchar](100) NOT NULL,
+	[ItemSizeName] [varchar](100) NOT NULL,
+	[ItemQty] [smallint] NOT NULL,
+	[ItemPrice] [smallmoney] NOT NULL,
+	[ItemModifiers] [varchar](200) NOT NULL,
+  	[ItemComments] [varchar](255) NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblOnlineOrderDetail_tblOnlineOrders] FOREIGN KEY([OrderID])
+REFERENCES [dbo].[tblOnlineOrders] ([OrderID])
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderDetail] CHECK CONSTRAINT [FK_tblOnlineOrderDetail_tblOnlineOrders]
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD   
+    [TotalAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblTable_TotalAmt]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblMemo]
+  ADD
+    [BulletinBoardMemo] [bit] NOT NULL CONSTRAINT [DF_tblMemo_BulletinBoardMemo]  DEFAULT ((0)),
+    [MemoRecordedDateTime] [smalldatetime] NULL
+GO
+
+ALTER TABLE [dbo].[tblCashInDrawer]
+  ADD
+    [NonCashTipOut] [smallmoney] NOT NULL CONSTRAINT [DF_tblCashInDrawer_NonCashTipOut]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD
+    [ManageInv] [bit] NOT NULL CONSTRAINT [DF_tblItem_ManageInv]  DEFAULT ((1))
+GO
+
+if exists (select * 
+           from tblItem
+           where ManageInv = 1
+             and (Taste = 1 or GroupItem = 1)) begin
+  update tblItem
+  set ManageInv = 0
+  where ManageInv = 1
+    and (Taste = 1 or GroupItem = 1)
+end
+GO
+
+DROP TABLE [dbo].[tblAvailableSizeTemp]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblAvailableSizeTemp]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblAvailableSizeTemp](
+	[StationName] [varchar](30) NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+	[SizeID] [smallint] NOT NULL,
+	[UnitPrice] [smallmoney] NOT NULL,
+	[OnHandQty] [smallint] NOT NULL,
+	[ApplyQty] [smallint] NOT NULL,
+	[ApplyNoDSC] [bit] NOT NULL,
+ CONSTRAINT [PK_tblAvailableSizeTemp] PRIMARY KEY CLUSTERED 
+(
+	[StationName] ASC,
+	[ItemID] ASC,
+	[SizeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSizeTemp] ADD  CONSTRAINT [DF_tblAvailableSizeTemp_UnitPrice]  DEFAULT ((0)) FOR [UnitPrice]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSizeTemp] ADD  CONSTRAINT [DF_tblAvailableSizeTemp_OnHandQty]  DEFAULT ((0)) FOR [OnHandQty]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSizeTemp] ADD  CONSTRAINT [DF_tblAvailableSizeTemp_ApplyQty]  DEFAULT ((0)) FOR [ApplyQty]
+GO
+
+ALTER TABLE [dbo].[tblAvailableSizeTemp] ADD  CONSTRAINT [DF_tblAvailableSizeTemp_ApplyNoDSC]  DEFAULT ((0)) FOR [ApplyNoDSC]
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [SoldOut] [bit] NOT NULL CONSTRAINT [DF_tblMenuLayout_SoldOut]  DEFAULT ((0))
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[rpt_sales_summary]') AND type in (N'U'))
+BEGIN
+  IF NOT EXISTS(SELECT *
+                FROM sys.columns 
+                WHERE Name = N'NonAlcoholSubTotal'
+                  AND Object_ID = Object_ID(N'rpt_sales_summary'))
+  BEGIN
+    
+    drop table rpt_sales_summary
+    drop table rpt_sales_summary_temp
+
+  END
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[rpt_sales_summary]') AND type in (N'U'))
+CREATE TABLE [dbo].[rpt_sales_summary](
+  [StoreID] [int] NOT NULL CONSTRAINT [DF_rpt_sales_summary_StoreID]  DEFAULT ((0)),
+  [UpdatedDateTime] [smalldatetime] NOT NULL,
+  [SaleDate] [smalldatetime] NOT NULL,
+  [SubTotal] [money] NOT NULL,
+  [DSC] [money] NOT NULL,
+  [Tax1] [money] NOT NULL,
+  [Tax2] [money] NOT NULL,
+  [Tax3] [money] NOT NULL,
+  [Total] [money] NOT NULL,
+  [FoodSubTotal] [money] NOT NULL,
+  [FoodTax1Total] [money] NOT NULL,
+  [FoodTax2Total] [money] NOT NULL,
+  [FoodTax3Total] [money] NOT NULL,
+  [NonAlcoholSubTotal] [money] NOT NULL,
+  [NonAlcoholTax1Total] [money] NOT NULL,
+  [NonAlcoholTax2Total] [money] NOT NULL,
+  [NonAlcoholTax3Total] [money] NOT NULL,
+  [AlcoholSubTotal] [money] NOT NULL,
+  [AlcoholTax1Total] [money] NOT NULL,
+  [AlcoholTax2Total] [money] NOT NULL,
+  [AlcoholTax3Total] [money] NOT NULL,
+  [DineInTotal] [money] NOT NULL,
+  [DineInCount] [int] NOT NULL,
+  [TakeOutTotal] [money] NOT NULL,
+  [TakeOutCount] [int] NOT NULL,
+  [DeliveryTotal] [money] NOT NULL,
+  [DeliveryCount] [int] NOT NULL,
+  [OnlineTotal] [money] NOT NULL,
+  [OnlineCount] [int] NOT NULL,
+  [TotalSum] [money] NOT NULL,
+  [NetCash] [money] NOT NULL,
+  [NetDebit] [money] NOT NULL,
+  [NetCredit] [money] NOT NULL,
+  [NetVisa] [money] NOT NULL,
+  [NetMc] [money] NOT NULL,
+  [NetAmex] [money] NOT NULL,
+  [NetCoupon] [money] NOT NULL,
+  [NetDiscover] [money] NOT NULL,
+  [NetJcb] [money] NOT NULL,
+  [NetGiftCard] [money] NOT NULL,
+  [NetRewardPoint] [money] NOT NULL,
+  [NetChargeOnAccount] [money] NOT NULL,
+  [NetCashTip] [money] NOT NULL,
+  [NetDebitTip] [money] NOT NULL,
+  [NetCreditTip] [money] NOT NULL,
+  [NetVisaTip] [money] NOT NULL,
+  [NetMcTip] [money] NOT NULL,
+  [NetAmexTip] [money] NOT NULL,
+  [NetCouponTip] [money] NOT NULL,
+  [NetDiscoverTip] [money] NOT NULL,
+  [NetJcbTip] [money] NOT NULL,
+  [NetGiftCardTip] [money] NOT NULL,
+  [NetChargeOnAccountTip] [money] NOT NULL,
+  [NetTip] [money] NOT NULL,
+  [CashPaymentCount] [int] NOT NULL,
+  [DebitPaymentCount] [int] NOT NULL,
+  [VisaPaymentCount] [int] NOT NULL,
+  [McPaymentCount] [int] NOT NULL,
+  [AmexPaymentCount] [int] NOT NULL,
+  [CouponPaymentCount] [int] NOT NULL,
+  [DiscoverPaymentCount] [int] NOT NULL,
+  [JcbPaymentCount] [int] NOT NULL,
+  [GiftCardPaymentCount] [int] NOT NULL,
+  [RewardPointPaymentCount] [int] NOT NULL,
+  [ChargeOnAccountPaymentCount] [int] NOT NULL,
+  [DailyChargeAmtOnPC] [money] NOT NULL,
+  [DailyUsedAmtOnPC] [money] NOT NULL,
+  [TotalChargeAmtOnPC] [money] NOT NULL,
+  [TotalUsedAmtOnPC] [money] NOT NULL,
+  [TotalBalanceOnPC] [money] NOT NULL,
+  [RefundSubTotal] [money] NOT NULL,
+  [RefundTax1] [money] NOT NULL,
+  [RefundTax2] [money] NOT NULL,
+  [RefundTax3] [money] NOT NULL,
+  [RefundTotal] [money] NOT NULL,
+  [PayoutSubTotal] [money] NOT NULL,
+  [PayoutTax1] [money] NOT NULL,
+  [PayoutTax2] [money] NOT NULL,
+  [PayoutTotal] [money] NOT NULL,
+  [CashPayoutTotal] [money] NOT NULL,
+  [DebitPayoutTotal] [money] NOT NULL,
+  [CreditPayoutTotal] [money] NOT NULL,
+  [ChequePayoutTotal] [money] NOT NULL,
+  [GivenCreditAmt] [money] NOT NULL,
+  [ReceivedCreditAmt] [money] NOT NULL,
+  [NetCreditAmt] [money] NOT NULL,
+  [SalesCount] [int] NOT NULL,
+  [RefundCount] [int] NOT NULL,
+  [NoSaleCount] [int] NOT NULL,
+  [ChargeOnAccSalesCount] [int] NOT NULL,
+  [PayoutCount] [int] NOT NULL,
+  [VoidCount] [int] NOT NULL,
+  [TransCount] [int] NOT NULL,
+  [GuestCount] [int] NOT NULL,
+  [AverageSaleAmt] [money] NOT NULL,
+  [DSCAmtGeneral] [money] NOT NULL,
+  [DSCAmtEmployee] [money] NOT NULL,
+  [DSCAmtType1] [money] NOT NULL,
+  [DSCAmtType2] [money] NOT NULL,
+  [DeletedItemsCount] [int] NOT NULL,
+  [DeletedAmount] [money] NOT NULL,
+  [SoldItemsCount] [int] NOT NULL,
+  [SoldAmount] [money] NOT NULL,
+  [Tax1Name] [varchar](20) NOT NULL,
+  [Tax2Name] [varchar](20) NOT NULL,
+  [Tax3Name] [varchar](20) NOT NULL
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[rpt_sales_summary_temp]') AND type in (N'U'))
+CREATE TABLE [dbo].[rpt_sales_summary_temp](
+  [SubTotal] [money] NOT NULL,
+  [DSC] [money] NOT NULL,
+  [Tax1] [money] NOT NULL,
+  [Tax2] [money] NOT NULL,
+  [Tax3] [money] NOT NULL,
+  [Total] [money] NOT NULL,
+  [FoodSubTotal] [money] NOT NULL,
+  [FoodTax1Total] [money] NOT NULL,
+  [FoodTax2Total] [money] NOT NULL,
+  [FoodTax3Total] [money] NOT NULL,
+  [NonAlcoholSubTotal] [money] NOT NULL,
+  [NonAlcoholTax1Total] [money] NOT NULL,
+  [NonAlcoholTax2Total] [money] NOT NULL,
+  [NonAlcoholTax3Total] [money] NOT NULL,
+  [AlcoholSubTotal] [money] NOT NULL,
+  [AlcoholTax1Total] [money] NOT NULL,
+  [AlcoholTax2Total] [money] NOT NULL,
+  [AlcoholTax3Total] [money] NOT NULL,
+  [DineInTotal] [money] NOT NULL,
+  [DineInCount] [int] NOT NULL,
+  [TakeOutTotal] [money] NOT NULL,
+  [TakeOutCount] [int] NOT NULL,
+  [DeliveryTotal] [money] NOT NULL,
+  [DeliveryCount] [int] NOT NULL,
+  [OnlineTotal] [money] NOT NULL,
+  [OnlineCount] [int] NOT NULL,
+  [TotalSum] [money] NOT NULL,
+  [NetCash] [money] NOT NULL,
+  [NetDebit] [money] NOT NULL,
+  [NetCredit] [money] NOT NULL,
+  [NetVisa] [money] NOT NULL,
+  [NetMc] [money] NOT NULL,
+  [NetAmex] [money] NOT NULL,
+  [NetCoupon] [money] NOT NULL,
+  [NetDiscover] [money] NOT NULL,
+  [NetJcb] [money] NOT NULL,
+  [NetGiftCard] [money] NOT NULL,
+  [NetRewardPoint] [money] NOT NULL,
+  [NetChargeOnAccount] [money] NOT NULL,
+  [NetCashTip] [money] NOT NULL,
+  [NetDebitTip] [money] NOT NULL,
+  [NetCreditTip] [money] NOT NULL,
+  [NetVisaTip] [money] NOT NULL,
+  [NetMcTip] [money] NOT NULL,
+  [NetAmexTip] [money] NOT NULL,
+  [NetCouponTip] [money] NOT NULL,
+  [NetDiscoverTip] [money] NOT NULL,
+  [NetJcbTip] [money] NOT NULL,
+  [NetGiftCardTip] [money] NOT NULL,
+  [NetChargeOnAccountTip] [money] NOT NULL,
+  [NetTip] [money] NOT NULL,
+  [CashPaymentCount] [int] NOT NULL,
+  [DebitPaymentCount] [int] NOT NULL,
+  [VisaPaymentCount] [int] NOT NULL,
+  [McPaymentCount] [int] NOT NULL,
+  [AmexPaymentCount] [int] NOT NULL,
+  [CouponPaymentCount] [int] NOT NULL,
+  [DiscoverPaymentCount] [int] NOT NULL,
+  [JcbPaymentCount] [int] NOT NULL,
+  [GiftCardPaymentCount] [int] NOT NULL,
+  [RewardPointPaymentCount] [int] NOT NULL,
+  [ChargeOnAccountPaymentCount] [int] NOT NULL,
+  [DailyChargeAmtOnPC] [money] NOT NULL,
+  [DailyUsedAmtOnPC] [money] NOT NULL,
+  [TotalChargeAmtOnPC] [money] NOT NULL,
+  [TotalUsedAmtOnPC] [money] NOT NULL,
+  [TotalBalanceOnPC] [money] NOT NULL,
+  [RefundSubTotal] [money] NOT NULL,
+  [RefundTax1] [money] NOT NULL,
+  [RefundTax2] [money] NOT NULL,
+  [RefundTax3] [money] NOT NULL,
+  [RefundTotal] [money] NOT NULL,
+  [PayoutSubTotal] [money] NOT NULL,
+  [PayoutTax1] [money] NOT NULL,
+  [PayoutTax2] [money] NOT NULL,
+  [PayoutTotal] [money] NOT NULL,
+  [CashPayoutTotal] [money] NOT NULL,
+  [DebitPayoutTotal] [money] NOT NULL,
+  [CreditPayoutTotal] [money] NOT NULL,
+  [ChequePayoutTotal] [money] NOT NULL,
+  [GivenCreditAmt] [money] NOT NULL,
+  [ReceivedCreditAmt] [money] NOT NULL,
+  [NetCreditAmt] [money] NOT NULL,
+  [SalesCount] [int] NOT NULL,
+  [RefundCount] [int] NOT NULL,
+  [NoSaleCount] [int] NOT NULL,
+  [ChargeOnAccSalesCount] [int] NOT NULL,
+  [PayoutCount] [int] NOT NULL,
+  [VoidCount] [int] NOT NULL,
+  [TransCount] [int] NOT NULL,
+  [GuestCount] [int] NOT NULL,
+  [AverageSaleAmt] [money] NOT NULL,
+  [DSCAmtGeneral] [money] NOT NULL,
+  [DSCAmtEmployee] [money] NOT NULL,
+  [DSCAmtType1] [money] NOT NULL,
+  [DSCAmtType2] [money] NOT NULL,
+  [DeletedItemsCount] [int] NOT NULL,
+  [DeletedAmount] [money] NOT NULL,
+  [SoldItemsCount] [int] NOT NULL,
+  [SoldAmount] [money] NOT NULL,
+  [Tax1Name] [varchar](20) NOT NULL,
+  [Tax2Name] [varchar](20) NOT NULL,
+  [Tax3Name] [varchar](20) NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [ApplySpecialPricing] [bit] NOT NULL CONSTRAINT [DF_tblTable_ApplySpecialPricing]  DEFAULT ((0)),
+    [SpecialPricingRate] [smallint] NOT NULL CONSTRAINT [DF_tblTable_SpecialPricingRate]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblItem]
+  ADD
+    [NonAlcohol] [bit] NOT NULL CONSTRAINT [DF_tblItem_NonAlcohol]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_TakeOut]
+GO
+ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_Delivery]
+GO
+ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_Online]
+GO
+ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_StayOn]
+GO
+
+ALTER TABLE [dbo].[tblTableLayout] DROP COLUMN [TakeOut]
+GO
+ALTER TABLE [dbo].[tblTableLayout] DROP COLUMN [Delivery]
+GO
+ALTER TABLE [dbo].[tblTableLayout] DROP COLUMN [Online]
+GO
+ALTER TABLE [dbo].[tblTableLayout] DROP COLUMN [StayOn]
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [StationID] [smallint] NOT NULL CONSTRAINT [DF_tblTable_StationID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblTableLayout]
+  ADD
+    [LayoutModeType] [tinyint] NOT NULL CONSTRAINT [DF_tblTableLayout_LayoutType]  DEFAULT ((1))
+GO
+
+DROP TABLE [dbo].[tblSelfCheckoutTableLayout]
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout]
+  ADD
+    [LayoutModeType] [tinyint] NOT NULL CONSTRAINT [DF_tblMenuLayout_LayoutType]  DEFAULT ((1))
+GO
+
+DROP TABLE [dbo].[tblSelfCheckoutMenuLayout]
+GO
+
+ALTER TABLE [dbo].[tblStation]
+  ADD
+    [Locked] [bit] NOT NULL CONSTRAINT [DF_tblStation_Locked]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblLoyaltyStampCard]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblLoyaltyStampCard](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CustomerID] [int] NULL,
+	[StampCount] [smallint] NULL,
+	[CreatedDateTime] [smalldatetime] NULL,
+ CONSTRAINT [PK_tblLoyaltyStampCard] PRIMARY KEY CLUSTERED
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblLoyaltyStampCardDetail]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblLoyaltyStampCardDetail](
+	[LoyaltyStampCardID] [int] NULL,
+	[StampSequenceNo] [smallint] NULL,
+	[StampedStatus] [bit] NULL,
+	[StampedDateTime] [smalldatetime] NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblLoyaltyStampCardDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblLoyaltyStampCardDetail_tblLoyaltyStampCard] FOREIGN KEY([LoyaltyStampCardID])
+REFERENCES [dbo].[tblLoyaltyStampCard] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblLoyaltyStampCardDetail] CHECK CONSTRAINT [FK_tblLoyaltyStampCardDetail_tblLoyaltyStampCard]
+GO
+
+ALTER TABLE [dbo].[tblCheckedOrders] ALTER COLUMN [Tastes] [varchar](2000) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblCheckedOrders] ALTER COLUMN [ItemName] [varchar](100) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders] ALTER COLUMN [Tastes] [varchar](2000) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblKitchenOrders] ALTER COLUMN [ItemName] [varchar](100) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] ALTER COLUMN [Tastes] [varchar](2000) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrders] ALTER COLUMN [ItemName] [varchar](100) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersBackup] ALTER COLUMN [Tastes] [varchar](2000) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersBackup] ALTER COLUMN [ItemName] [varchar](100) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] ALTER COLUMN [Tastes] [varchar](2000) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPendingOrdersTemp] ALTER COLUMN [ItemName] [varchar](100) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblSalesDetail] ALTER COLUMN [Tastes] [varchar](2000) NULL
+GO
+
+CREATE NONCLUSTERED INDEX [idx_DeletedItems_SalesID] ON [dbo].[tblDeletedItems]
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblMenuLayout] ALTER COLUMN [NextItemName] [varchar](200) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblPayment] ALTER COLUMN [SequenceNo] [varchar](100) NULL
+GO
+
+if exists (select * 
+           from tblPeripherals
+           where Code = 'BTCH#') begin
+
+  delete
+  from tblPeripherals
+  where Code in ('PURL', 'SURL', 'APPID', 'MERID', 'TERID', 'DEVID', 'SERID', 'PTID', 'PDID', 'CCOMP', 'CCMPC', 'ENPP', 'PBD', 'BDBBS', 'BTCH#', 'CITM#', 'DITM#')
+
+  delete
+  from tblMisc
+  where Code in ('PURL', 'SURL', 'PTAC')
+
+end
+GO
+
+ALTER TABLE [dbo].[tblPayment]
+  ADD
+    [PaidDateTime] [datetime] NULL
+GO
+
+if exists (select *
+           from tblPayment
+           where PaidDateTime is null) begin
+
+  update p
+  set p.PaidDateTime = s.SaleDateTime
+  from tblSales s
+    inner join tblPayment p on p.SalesID = s.ID
+  where p.PaidDateTime is null
+
+end
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCustomerConsent]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCustomerConsent](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CustomerID] [int] NOT NULL,
+	[Address1] [varchar](100) NOT NULL,
+	[Address2] [varchar](100) NOT NULL,
+	[City] [varchar](50) NOT NULL,
+	[Province] [varchar](5) NOT NULL,
+	[PostalCode] [varchar](10) NOT NULL,
+	[Phone] [varchar](50) NOT NULL,
+	[Email] [varchar](100) NOT NULL,
+	[ConsentDateTime] [smalldatetime] NOT NULL,
+ CONSTRAINT [PK_tblCustomerConsent] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCustomerConsentChild]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCustomerConsentChild](
+	[CustomerConsentID] [int] NOT NULL,
+	[FirstName] [varchar](50) NOT NULL,
+	[LastName] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblCustomerConsentChild]  WITH CHECK ADD  CONSTRAINT [FK_tblCustomerConsentChild_tblCustomerConsent] FOREIGN KEY([CustomerConsentID])
+REFERENCES [dbo].[tblCustomerConsent] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblCustomerConsentChild] CHECK CONSTRAINT [FK_tblCustomerConsentChild_tblCustomerConsent]
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans] ALTER COLUMN [SequenceNo] [varchar](100) NULL
+GO
+
+ALTER TABLE [dbo].[tblCardReceiptTemplate]
+  ADD    
+    [CardReceiptEmbedded] [nvarchar](3000) NULL
+GO
+
+ALTER TABLE [dbo].[rpt_sales_summary]
+  ADD
+    [PriceChangedItemsCount] [int] NOT NULL CONSTRAINT [DF_rpt_sales_summary_PriceChangedItemsCount]  DEFAULT ((0)),
+    [PriceChangedAmount] [money] NOT NULL CONSTRAINT [DF_rpt_sales_summary_PriceChangedAmount]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[rpt_sales_summary_temp]
+  ADD
+    [PriceChangedItemsCount] [int] NOT NULL CONSTRAINT [DF_rpt_sales_summary_temp_PriceChangedItemsCount]  DEFAULT ((0)),
+    [PriceChangedAmount] [money] NOT NULL CONSTRAINT [DF_rpt_sales_summary_temp_PriceChangedAmount]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblStoreCredit]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblStoreCredit](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CustomerID] [int] NOT NULL,
+	[StoreCreditSalesID] [int] NOT NULL,
+	[StoreCreditRefundSalesID] [int] NOT NULL,
+	[StoreCreditAmount] [smallmoney] NOT NULL,
+	[StoreCreditDate] [smalldatetime] NOT NULL,
+	[StoreCreditMemo] [varchar](255) NULL,
+	[StoreCreditUserID] [smallint] NOT NULL CONSTRAINT [DF_tblStoreCredit_StoreCreditUserID]  DEFAULT ((0)),
+	[StoreCreditUsed] [bit] NOT NULL CONSTRAINT [DF_tblStoreCredit_StoreCreditUsed]  DEFAULT ((0)),
+	[StoreCreditUsedSalesID] [int] NOT NULL CONSTRAINT [DF_tblStoreCredit_StoreCreditUsedSalesID]  DEFAULT ((0)),
+	[StoreCreditUsedDate] [smalldatetime] NULL,
+	[StoreCreditUsedUserID] [smallint] NOT NULL CONSTRAINT [DF_tblStoreCredit_StoreCreditUsedUserID]  DEFAULT ((0)),
+	[StoreCreditVoided] [bit] NOT NULL CONSTRAINT [DF_tblStoreCredit_StoreCreditVoided]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblStoreCredit] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblStoreCredit]  WITH CHECK ADD  CONSTRAINT [FK_tblStoreCredit_tblCustomer] FOREIGN KEY([CustomerID])
+REFERENCES [dbo].[tblCustomer] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblStoreCredit] CHECK CONSTRAINT [FK_tblStoreCredit_tblCustomer]
+GO
+
+ALTER TABLE [dbo].[tblStoreCredit]  WITH CHECK ADD  CONSTRAINT [FK_tblStoreCredit_tblSales] FOREIGN KEY([StoreCreditSalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblStoreCredit] CHECK CONSTRAINT [FK_tblStoreCredit_tblSales]
+GO
+
+ALTER TABLE [dbo].[tblStoreCredit]  WITH CHECK ADD  CONSTRAINT [FK_tblStoreCredit_tblUser] FOREIGN KEY([StoreCreditUserID])
+REFERENCES [dbo].[tblUser] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblStoreCredit] CHECK CONSTRAINT [FK_tblStoreCredit_tblUser]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.indexes
+           where name = ''idx_CustomerNum'' 
+             and object_id = object_id(''dbo.tblCustomer'')
+             and is_unique_constraint = 0) begin
+
+  if not exists (select CustomerNum
+                 from tblCustomer
+                 group by CustomerNum
+                 having count(CustomerNum) > 1) begin
+
+    CREATE UNIQUE NONCLUSTERED INDEX [idx_CustomerNum] ON [dbo].[tblCustomer]
+    (
+	    [CustomerNum] ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = ON, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+  end
+  else begin
+
+    declare @CustomerNum varchar(15), @OriginalID int, @EarnedPoints int
+
+    declare duplicate_customer_num cursor for
+      select CustomerNum, min(ID) as OriginalID, sum(EarnedPoints) as EarnedPoints
+      from tblCustomer
+      group by CustomerNum
+      having count(CustomerNum) > 1
+
+      open duplicate_customer_num
+      fetch next from duplicate_customer_num into @CustomerNum, @OriginalID, @EarnedPoints
+      while (@@fetch_status = 0) begin
+
+        update s
+        set s.CustomerID = @OriginalID
+        --select *
+        from tblSales s
+          inner join tblCustomer c on s.CustomerID = c.ID
+        where c.CustomerNum = @CustomerNum
+          and c.ID <> @OriginalID
+
+        update p
+        set p.CustomerID = @OriginalID
+        --select *
+        from tblPrepaidCards p
+          inner join tblCustomer c on p.CustomerID = c.ID
+        where c.CustomerNum = @CustomerNum
+          and c.ID <> @OriginalID
+
+        update b
+        set b.CustomerID = @OriginalID
+        --select *
+        from tblBillCollectHistory b
+          inner join tblCustomer c on b.CustomerID = c.ID
+        where c.CustomerNum = @CustomerNum
+          and c.ID <> @OriginalID
+
+        update c
+        set c.CustomerNum = replicate(''0'', 15 - len(convert(varchar, c.ID))) + convert(varchar, c.ID)
+        from tblCustomer c
+        where c.CustomerNum = @CustomerNum
+          and c.ID <> @OriginalID
+
+        update c
+        set c.EarnedPoints = @EarnedPoints
+        from tblCustomer c
+        where c.ID = @OriginalID
+
+        fetch next from duplicate_customer_num into @CustomerNum, @OriginalID, @EarnedPoints
+      end
+      close duplicate_customer_num
+    deallocate duplicate_customer_num
+
+    if not exists (select CustomerNum
+                   from tblCustomer
+                   group by CustomerNum
+                   having count(CustomerNum) > 1) begin
+
+      CREATE UNIQUE NONCLUSTERED INDEX [idx_CustomerNum] ON [dbo].[tblCustomer]
+      (
+	      [CustomerNum] ASC
+      )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = ON, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+    end
+
+  end
+
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblTare]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblTare](
+	[ID] [smallint] IDENTITY(1,1) NOT NULL,
+	[TareDescription] [varchar](50) NOT NULL,
+	[TareWeight] [float] NOT NULL CONSTRAINT [DF_tblTare_TareWeight]  DEFAULT ((0)),
+ CONSTRAINT [PK_tblTare] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblTare]
+  ADD
+    [DefaultTare] [bit] NOT NULL CONSTRAINT [DF_tblTare_DefaultTare]  DEFAULT ((0))
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if not exists (select 1
+               from tblTare) begin
+
+  declare @ScaleOffsetValue float
+
+  select @ScaleOffsetValue = convert(float, Value)
+  from tblMisc
+  where Code = ''SOFFV''
+
+  set @ScaleOffsetValue = isnull(@ScaleOffsetValue, 0)
+
+  insert into tblTare (TareDescription, TareWeight, DefaultTare)
+  values (''Tare Weight'', @ScaleOffsetValue, 1)  
+
+end'
+GO
+
+ALTER TABLE [dbo].[tblCustomerConsentChild]
+  ADD
+    [Consent] [bit] NOT NULL CONSTRAINT [DF_tblCustomerConsentChild_Consent]  DEFAULT ((1))
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [StationIDInUse] [smallint] NOT NULL CONSTRAINT [DF_tblTable_StationIDInUse]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSales]
+  ADD
+    [CreatedDateTime] [datetime] NULL CONSTRAINT [DF_tblSales_CreatedDateTime]  DEFAULT (getdate())
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select 1
+           from tblMisc
+           where Code = ''PTAOL'' 
+             and upper(Value) in (''TRUE'', ''FALSE'')) begin
+
+  update tblMisc
+  set Value = case when upper(Value) = ''TRUE'' then ''2'' else ''0'' end
+  where Code = ''PTAOL''
+
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select 1
+           from tblMisc
+           where Code in (''VTSOL'', ''VTSFM'')
+             and upper(Value) in (''TRUE'', ''FALSE'')) begin
+
+  update tblMisc
+  set Value = case when upper(Value) = ''TRUE'' then ''1'' else ''2'' end
+  where Code = ''VTSFM''
+
+  update m2
+  set m2.Value = case when m1.Value <> ''1'' then
+                        case when upper(m2.Value) = ''TRUE'' then ''0'' else ''2'' end
+                      else ''1''
+                 end
+  from (select *
+        from tblMisc 
+        where Code = ''VTSFM'') m1
+    inner join (select *
+                from tblMisc
+                where Code = ''VTSOL'') m2 on 1 = 1
+
+end'
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select 1
+           from tblMisc
+           where Code in (''LGAP'', ''VFOLO'', ''EPFOL'')
+             and upper(Value) in (''TRUE'', ''FALSE'')) begin
+
+  update tblMisc
+  set Value = case when upper(Value) = ''TRUE'' then ''1'' else ''0'' end
+  where Code = ''LGAP''
+
+  update tblMisc
+  set Value = case when upper(Value) = ''TRUE'' then ''2'' else ''1'' end
+  where Code = ''VFOLO''
+
+  update tblMisc
+  set Value = case when upper(Value) = ''TRUE'' then ''2'' else ''1'' end
+  where Code = ''EPFOL''
+
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCashTip]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCashTip](
+	[SalesID] [int] NOT NULL,
+	[CashTipAmount] [smallmoney] NOT NULL CONSTRAINT [DF_tblCashTip_CashTipAmount]  DEFAULT ((0)),
+	[ShiftIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblCashTip_ShiftIndex]  DEFAULT ((0))
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblCashTip]  WITH CHECK ADD  CONSTRAINT [FK_tblCashTip_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblCashTip] CHECK CONSTRAINT [FK_tblCashTip_tblSales]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblOnlineOrderCompany]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblOnlineOrderCompany](
+	[ID] [smallint] IDENTITY(1,1) NOT NULL,
+	[CompanyName] [varchar](50) NOT NULL,
+	[CompanyColor] [int] NULL CONSTRAINT [DF_tblOnlineOrderCompany_CompanyColor]  DEFAULT ((16777215)),
+	[ShowNameOnButton] [bit] NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_ShowNameOnButton]  DEFAULT ((0)),
+	[Status] [bit] NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_Status]  DEFAULT ((1)),
+ CONSTRAINT [PK_tblOnlineOrderCompany] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [OnlineOrderCompanyID] [smallint] NOT NULL CONSTRAINT [DF_tblTable_OnlineOrderCompanyID]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblSalesOfOnlineOrders]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblSalesOfOnlineOrders](
+	[SalesID] [int] NOT NULL,
+	[OnlineOrderCompanyID] [smallint] NOT NULL,
+ CONSTRAINT [PK_tblSalesOfOnlineOrders] PRIMARY KEY CLUSTERED 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders]  WITH CHECK ADD  CONSTRAINT [FK_tblSalesOfOnlineOrders_tblOnlineOrderCompany] FOREIGN KEY([OnlineOrderCompanyID])
+REFERENCES [dbo].[tblOnlineOrderCompany] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders] CHECK CONSTRAINT [FK_tblSalesOfOnlineOrders_tblOnlineOrderCompany]
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders]  WITH CHECK ADD  CONSTRAINT [FK_tblSalesOfOnlineOrders_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders] CHECK CONSTRAINT [FK_tblSalesOfOnlineOrders_tblSales]
+GO
+
+ALTER TABLE [dbo].[tblPrepaidCardChargeHistory]
+  ADD
+    [DiscountAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblPrepaidCardChargeHistory_DiscountAmt]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[rpt_sales_summary]
+  ADD
+    [DailyDiscountAmtOnPC] [money] NOT NULL CONSTRAINT [DF_rpt_sales_summary_DailyDiscountAmtOnPC]  DEFAULT ((0)),
+    [TotalDiscountAmtOnPC] [money] NOT NULL CONSTRAINT [DF_rpt_sales_summary_TotalDiscountAmtOnPC]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[rpt_sales_summary_temp]
+  ADD
+    [DailyDiscountAmtOnPC] [money] NOT NULL CONSTRAINT [DF_rpt_sales_summary_temp_DailyDiscountAmtOnPC]  DEFAULT ((0)),
+    [TotalDiscountAmtOnPC] [money] NOT NULL CONSTRAINT [DF_rpt_sales_summary_temp_TotalDiscountAmtOnPC]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrders]
+  ADD
+    [DiscountPercent] [float] NOT NULL CONSTRAINT [DF_tblOnlineOrders_DiscountPercent]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblCustomerConsentChild]
+  ADD
+    [Birthdate] [smalldatetime] NULL 
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrders]
+  ADD
+    [Tip] [smallmoney] NOT NULL CONSTRAINT [DF_tblOnlineOrders_Tip]  DEFAULT ((0))
+GO
+
+if exists (select * 
+           from tblMisc
+           where Code = 'OPLM') begin
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin0', 0, 'OPLM0')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin1', 0, 'OPLM1')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin2', 0, 'OPLM2')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin3', 0, 'OPLM3')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin4', 0, 'OPLM4')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin5', 0, 'OPLM5')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintLeftMargin6', 0, 'OPLM6')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin0', 0, 'OPTM0')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin1', 0, 'OPTM1')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin2', 0, 'OPTM2')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin3', 0, 'OPTM3')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin4', 0, 'OPTM4')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin5', 0, 'OPTM5')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintTopMargin6', 0, 'OPTM6')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin0', 0, 'OPBM0')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin1', 0, 'OPBM1')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin2', 0, 'OPBM2')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin3', 0, 'OPBM3')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin4', 0, 'OPBM4')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin5', 0, 'OPBM5')
+
+  insert into tblMisc (MiscName, [Value], Code)
+  values ('OrderPrintBottomMargin6', 0, 'OPBM6')
+
+  update m1
+  set m1.Value = m2.Value
+  from (select *
+        from tblMisc
+        where Code like 'OPLM[0-6]' 
+           or Code like 'OPTM[0-6]') m1
+    inner join (select *
+                from tblMisc 
+                where Code in ('OPLM', 'OPTM')) m2 on m2.Code = substring(m1.Code, 1, 4) 
+
+  delete
+  from tblMisc
+  where Code in ('OPLM', 'OPTM')
+
+end
+GO
+
+CREATE CLUSTERED INDEX [idx_OnlineOrderDetailOrderID] ON [dbo].[tblOnlineOrderDetail] 
+(
+	[OrderID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrders]
+  ADD
+    [SalesID] [int] NOT NULL CONSTRAINT [DF_tblOnlineOrders_SalesID]  DEFAULT ((0))
+GO
+
+CREATE NONCLUSTERED INDEX [idx_KitchenOrders_SalesID] ON [dbo].[tblKitchenOrders] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.indexes
+           where name = ''idx_salesid'' 
+             and object_id = object_id(''dbo.tblPayment'')
+             and is_unique_constraint = 0) begin
+
+  DROP INDEX [idx_salesid] ON [dbo].[tblPayment] WITH ( ONLINE = OFF )
+  
+end'
+GO
+
+CREATE NONCLUSTERED INDEX [idx_Payment_SalesID] ON [dbo].[tblPayment] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.indexes
+           where name = ''idx_SalesID'' 
+             and object_id = object_id(''dbo.tblPendingOrders'')
+             and is_unique_constraint = 0) begin
+
+  DROP INDEX [idx_SalesID] ON [dbo].[tblPendingOrders] WITH ( ONLINE = OFF )
+
+end'
+GO
+
+CREATE NONCLUSTERED INDEX [idx_PendingOrders_SalesID] ON [dbo].[tblPendingOrders] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from sys.indexes
+           where name = ''idx_SalesID'' 
+             and object_id = object_id(''dbo.tblSalesDetail'')
+             and is_unique_constraint = 0) begin
+
+  DROP INDEX [idx_SalesID] ON [dbo].[tblSalesDetail] WITH ( ONLINE = OFF )
+
+end'
+GO
+
+CREATE NONCLUSTERED INDEX [idx_SalesDetail_SalesID] ON [dbo].[tblSalesDetail] 
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblSubItem]
+  ADD
+    [PrintToKitchenIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblSubItem_PrintToKitchenIndex]  DEFAULT ((0))
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select 1
+           from tblSubItem
+           where SubItemDescription like ''BK_%''
+              or SubItemDescription like ''F1_%''
+              or SubItemDescription like ''F2_%''
+              or SubItemDescription like ''BR_%'') begin
+
+  update tblSubItem
+  set SubItemDescription = substring(SubItemDescription, 4, 50),
+      PrintToKitchenIndex = 1
+  where SubItemDescription like ''BK_%''
+
+  update tblSubItem
+  set SubItemDescription = substring(SubItemDescription, 4, 50),
+      PrintToKitchenIndex = 2
+  where SubItemDescription like ''F1_%''
+
+  update tblSubItem
+  set SubItemDescription = substring(SubItemDescription, 4, 50),
+      PrintToKitchenIndex = 3
+  where SubItemDescription like ''F2_%''
+
+  update tblSubItem
+  set SubItemDescription = substring(SubItemDescription, 4, 50),
+      PrintToKitchenIndex = 4
+  where SubItemDescription like ''BR_%''
+
+end'
+GO
+
+ALTER TABLE [dbo].[tblOrderPrintCue]
+  ADD
+    [PrintedStatus] [tinyint] NOT NULL CONSTRAINT [DF_tblOrderPrintCue_PrintedStatus]  DEFAULT ((0)),
+    [DateTimeIn] [datetime] NOT NULL CONSTRAINT [DF_tblOrderPrintCue_DateTimeIn]  DEFAULT (getdate()),
+    [DateTimeOut] [datetime] NULL,
+    [PrintedDateTime] [datetime] NULL
+GO
+
+IF EXISTS (select *
+           from sys.objects  
+           where type = 'D' 
+             and name = 'DF_tblSales_SaleDate') BEGIN
+
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_GSTRate]
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_PSTRate]
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_PST2Rate]
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_PSTRate_1]
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_SaleDate]
+
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_GSTRate]  DEFAULT ((0)) FOR [GSTRate]
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_PSTRate]  DEFAULT ((0)) FOR [PSTRate]
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_PST2Rate]  DEFAULT ((0)) FOR [PST2Rate]
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_DailyOrderNumber]  DEFAULT ((0)) FOR [DailyOrderNumber]
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_SaleDateTime]  DEFAULT (getdate()) FOR [SaleDateTime]
+
+END
+GO
+
+IF EXISTS (select *
+           from INFORMATION_SCHEMA.COLUMNS IC 
+           where TABLE_NAME = 'tblSales' 
+             and COLUMN_NAME = 'GSTRate'
+             and DATA_TYPE = 'float') BEGIN
+
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_GSTRate]
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_PSTRate]
+  ALTER TABLE [dbo].[tblSales] DROP CONSTRAINT [DF_tblSales_PST2Rate]
+
+  ALTER TABLE [dbo].[tblSales] ALTER COLUMN [GSTRate] [decimal](5, 4) NOT NULL
+  ALTER TABLE [dbo].[tblSales] ALTER COLUMN [PSTRate] [decimal](5, 4) NOT NULL
+  ALTER TABLE [dbo].[tblSales] ALTER COLUMN [PST2Rate] [decimal](5, 4) NOT NULL
+
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_GSTRate]  DEFAULT ((0)) FOR [GSTRate]
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_PSTRate]  DEFAULT ((0)) FOR [PSTRate]
+  ALTER TABLE [dbo].[tblSales] ADD  CONSTRAINT [DF_tblSales_PST2Rate]  DEFAULT ((0)) FOR [PST2Rate]
+
+END
+GO
+
+IF EXISTS (select *
+           from sys.objects  
+           where type = 'D' 
+             and name = 'DF_tblTableLayout_LayoutType') BEGIN
+
+  ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_Color1] 
+  ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_FontColor1] 
+  ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_FontSize1]
+  ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_LayoutType]  
+
+  ALTER TABLE [dbo].[tblTableLayout] ADD  CONSTRAINT [DF_tblTableLayout_Color]  DEFAULT ((0)) FOR [Color]
+  ALTER TABLE [dbo].[tblTableLayout] ADD  CONSTRAINT [DF_tblTableLayout_FontColor]  DEFAULT ((0)) FOR [FontColor] 
+  ALTER TABLE [dbo].[tblTableLayout] ADD  CONSTRAINT [DF_tblTableLayout_FontSize]  DEFAULT ((12)) FOR [FontSize]
+  ALTER TABLE [dbo].[tblTableLayout] ADD  CONSTRAINT [DF_tblTableLayout_LayoutModeType]  DEFAULT ((1)) FOR [LayoutModeType]
+
+END
+GO
+
+IF EXISTS (select *
+           from INFORMATION_SCHEMA.COLUMNS IC 
+           where TABLE_NAME = 'tblTableLayout' 
+             and COLUMN_NAME = 'FontSize'
+             and DATA_TYPE <> 'tinyint') BEGIN
+
+  ALTER TABLE [dbo].[tblTableLayout] DROP CONSTRAINT [DF_tblTableLayout_FontSize]  
+  ALTER TABLE [dbo].[tblTableLayout] ALTER COLUMN [FontSize] [tinyint] NOT NULL
+  ALTER TABLE [dbo].[tblTableLayout] ADD  CONSTRAINT [DF_tblTableLayout_FontSize]  DEFAULT ((12)) FOR [FontSize]
+
+END
+GO
+
+ALTER TABLE [dbo].[tmpTableLayoutBackup] ALTER COLUMN [FontSize] [tinyint] NOT NULL
+GO
+
+IF EXISTS (select *
+           from sys.objects  
+           where type = 'D' 
+             and name = 'DF_tblMenuLayout_LayoutType') BEGIN
+
+  ALTER TABLE [dbo].[tblMenuLayout] DROP CONSTRAINT [DF_tblMenuLayout_LayoutType]
+  ALTER TABLE [dbo].[tblMenuLayout] ADD  CONSTRAINT [DF_tblMenuLayout_LayoutModeType]  DEFAULT ((1)) FOR [LayoutModeType]
+
+END
+GO
+
+IF EXISTS (select *
+           from INFORMATION_SCHEMA.COLUMNS IC 
+           where TABLE_NAME = 'tblMenuLayout' 
+             and COLUMN_NAME = 'FontSize'
+             and DATA_TYPE <> 'tinyint') BEGIN
+
+  ALTER TABLE [dbo].[tblMenuLayout] DROP CONSTRAINT [DF_tblMenuLayout_FontSize]
+  ALTER TABLE [dbo].[tblMenuLayout] ALTER COLUMN [FontSize] [tinyint] NOT NULL
+  ALTER TABLE [dbo].[tblMenuLayout] ADD  CONSTRAINT [DF_tblMenuLayout_FontSize]  DEFAULT ((12)) FOR [FontSize]
+
+END
+GO
+  
+ALTER TABLE [dbo].[tmpMenuLayoutBackup] ALTER COLUMN [FontSize] [tinyint] NOT NULL
+GO
+
+IF EXISTS (select *
+           from INFORMATION_SCHEMA.COLUMNS IC 
+           where TABLE_NAME = 'tblOrderPrintCue' 
+             and COLUMN_NAME = 'PrintedStatus'
+             and DATA_TYPE <> 'tinyint') BEGIN
+
+  ALTER TABLE [dbo].[tblOrderPrintCue] DROP CONSTRAINT [DF_tblOrderPrintCue_PrintedStatus]
+  ALTER TABLE [dbo].[tblOrderPrintCue] ALTER COLUMN [PrintedStatus] [tinyint] NOT NULL
+  ALTER TABLE [dbo].[tblOrderPrintCue] ADD  CONSTRAINT [DF_tblOrderPrintCue_PrintedStatus]  DEFAULT ((0)) FOR [PrintedStatus]
+
+END
+GO
+
+ALTER TABLE [dbo].[tblCustomer] ALTER COLUMN [CustomerNum] [varchar](20) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [AccessPermissionRequired] [bit] NOT NULL CONSTRAINT [DF_tblTable_AccessPermissionRequired]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblUser]
+  ADD
+    [AccessPermission] [bit] NOT NULL CONSTRAINT [DF_tblUser_AccessPermission]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (select *
+               from INFORMATION_SCHEMA.COLUMNS IC 
+               where TABLE_NAME = 'tblSalesDetail' 
+                 and COLUMN_NAME = 'ItemName') BEGIN
+
+  ALTER TABLE [dbo].[tblSalesDetail]
+    ADD
+      [ItemName] [varchar](100) NOT NULL CONSTRAINT [DF_tblSalesDetail_ItemName]  DEFAULT (''),
+      [ItemName2] [varchar](30) NOT NULL CONSTRAINT [DF_tblSalesDetail_ItemName2]  DEFAULT (''),
+      [SizeName] [varchar](30) NOT NULL CONSTRAINT [DF_tblSalesDetail_SizeName]  DEFAULT ('')
+
+END
+GO
+
+if exists (select *
+           from tblSalesDetail 
+           where ItemName = '') begin
+
+  update sd
+  set sd.ItemName = case when (i.Taste = 1 and sd.SizeID > 1) then z.SizeName else i.IName end,
+      sd.ItemName2 = isnull(i.IName2, ''),
+      sd.SizeName = case when i.Taste = 1 then '' else z.SizeName end
+  from tblSalesDetail sd
+    inner join tblItem i on sd.ItemID = i.ID
+    inner join tblSize z on sd.SizeID = z.ID 
+  where sd.ItemName = ''
+
+end
+GO
+
+ALTER TABLE [dbo].[tblAvailableSize]
+  ADD
+    [UnitPrice2] [smallmoney] NOT NULL CONSTRAINT [DF_tblAvailableSize_UnitPrice2]  DEFAULT ((0)),
+    [UnitPrice3] [smallmoney] NOT NULL CONSTRAINT [DF_tblAvailableSize_UnitPrice3]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblAvailableSizeTemp]
+  ADD
+    [UnitPrice2] [smallmoney] NOT NULL CONSTRAINT [DF_tblAvailableSizeTemp_UnitPrice2]  DEFAULT ((0)),
+    [UnitPrice3] [smallmoney] NOT NULL CONSTRAINT [DF_tblAvailableSizeTemp_UnitPrice3]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [AppliedUnitPriceType] [tinyint] NOT NULL CONSTRAINT [DF_tblTable_AppliedUnitPriceType]  DEFAULT ((1))
+GO
+
+CREATE NONCLUSTERED INDEX [idx_ReservationPhone] ON [dbo].[tblReservation] 
+(
+	[PhoneNumber] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_CustomerPhone] ON [dbo].[tblCustomer] 
+(
+	[Phone] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+if exists (select *
+           from tblCustomer 
+           where ltrim(rtrim(CustomerNum)) = '') begin
+  update c
+  set c.CustomerNum = replicate('0', 15 - len(convert(varchar, c.ID))) + convert(varchar, c.ID)
+  from tblCustomer c
+  where ltrim(rtrim(c.CustomerNum)) = ''
+
+end
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompany]
+  ADD
+    [CommissionPercentage] [decimal](4, 2) NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_CommissionPercentage]  DEFAULT ((0))
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblOnlineOrderCompanyCommissionRule]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblOnlineOrderCompanyCommissionRule](
+	[OnlineOrderCompanyID] [smallint] NOT NULL,
+	[CommissionIndex] [tinyint] NOT NULL,
+	[SaleTotalFrom] [money] NOT NULL,
+	[SaleTotalUpTo] [money] NULL,
+	[CommissionPercentage] [decimal](4, 2) NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompanyCommissionRule]  WITH CHECK ADD  CONSTRAINT [FK_tblOnlineOrderCompanyCommissionRule_tblOnlineOrderCompany] FOREIGN KEY([OnlineOrderCompanyID])
+REFERENCES [dbo].[tblOnlineOrderCompany] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompanyCommissionRule] CHECK CONSTRAINT [FK_tblOnlineOrderCompanyCommissionRule_tblOnlineOrderCompany]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompany]
+  ADD
+    [PrintWaitressCopyForPickupOrder] [bit] NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_PrintWaitressCopyForPickupOrder]  DEFAULT ((0)),
+    [PrintWaitressCopyForDeliveryOrder] [bit] NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_PrintWaitressCopyForDeliveryOrder]  DEFAULT ((0))
+GO
+
+if exists (select *
+           from tblMisc
+           where Code = 'APWCO'
+             and upper(Value) = 'TRUE') begin
+
+  update tblOnlineOrderCompany
+  set PrintWaitressCopyForPickupOrder = 1
+
+  update tblMisc
+  set Value = 'False'
+  where Code = 'APWCO'
+
+end
+GO
+
+if exists (select *
+           from tblMisc
+           where Code = 'APWCD'
+             and upper(Value) = 'TRUE') begin
+
+  update tblOnlineOrderCompany
+  set PrintWaitressCopyForDeliveryOrder = 1
+
+  update tblMisc
+  set Value = 'False'
+  where Code = 'APWCD'
+
+end
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompany]
+  ADD
+    [PromptToEnterOnlineOrderNumber] [bit] NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_PromptToEnterOnlineOrderNumber]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrders]
+  ADD
+    [AltOrderID] [int] NOT NULL CONSTRAINT [DF_tblOnlineOrders_AltOrderID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblOrderNumber]
+  ADD
+    [CalledDateTime] [datetime] NOT NULL CONSTRAINT [DF_tblOrderNumber_CalledDateTime]  DEFAULT (getdate())
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders]
+  ADD
+    [OnlineOrderNumber] [varchar](20) NOT NULL CONSTRAINT [DF_tblSalesOfOnlineOrders_OnlineOrderNumber]  DEFAULT (''),
+    [OnlineOrderCustomerName] [varchar](100) NOT NULL CONSTRAINT [DF_tblSalesOfOnlineOrders_OnlineOrderCustomerName]  DEFAULT ('')
+GO
+
+ALTER TABLE [dbo].[tblTable]
+  ADD
+    [OnlineOrderNumber] [varchar](20) NOT NULL CONSTRAINT [DF_tblTable_OnlineOrderNumber]  DEFAULT ('')
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblCallHistory]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblCallHistory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CallerNumber] [varchar](20) NOT NULL,
+	[CallerName] [varchar](100) NOT NULL,
+	[CalledDateTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_tblCallHistory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+if exists (select *
+           from tblMisc
+           where Code = 'PBIPQ'
+             and upper(Value) = 'TRUE') begin
+
+  update tblMisc
+  set Value = 'False'
+  where Code = 'PBIPQ'
+
+end
+GO
+
+ALTER TABLE [dbo].[tblOrderPrintCue]
+  ADD
+    [IsReprinting] [bit] NOT NULL CONSTRAINT [DF_tblOrderPrintCue_IsReprinting]  DEFAULT ((0))
+GO
+
+if exists (select *
+           from tblPeripherals
+           where (Code like 'KP_N'
+                  or
+                  Code = 'BPN')
+             and Value = '''') begin
+
+  update tblPeripherals
+  set Value = ''
+  where (Code like 'KP_N'
+         or
+         Code = 'BPN')
+    and Value = ''''
+
+end
+GO
+
+ALTER TABLE [dbo].[tblTimeStartEnd]
+  ADD
+    [PersonIndex] [tinyint] NOT NULL CONSTRAINT [DF_tblTimeStartEnd_PersonIndex]  DEFAULT ((0))
+GO
+
+
+ALTER TABLE [dbo].[tblOnlineOrders]
+  ADD
+    [TableID] [smallint] NULL,
+    [OnlineOrderCompanyID] [smallint] NOT NULL CONSTRAINT [DF_tblOnlineOrders_OnlineOrderCompanyID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderDetail]
+  ADD
+    [OnlineOrderCompanyID] [smallint] NOT NULL CONSTRAINT [DF_tblOnlineOrderDetail_OnlineOrderCompanyID]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompany]
+  ADD
+    [Integrated] [bit] NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_Integrated]  DEFAULT ((0)),
+    [IntegrationCode] [varchar](50) NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_IntegrationCode]  DEFAULT (''),
+    [APITransactionKey] [varchar](100) NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_APITransactionKey]  DEFAULT (''),
+    [DineInSelfOrderURL] [varchar](1000) NULL CONSTRAINT [DF_tblOnlineOrderCompany_DineInSelfOrderURL]  DEFAULT ('')
+GO
+
+EXEC dbo.sp_executesql @statement = N'
+if exists (select *
+           from tblOnlineOrderCompany
+           where upper(ltrim(rtrim(CompanyName))) = ''EPOS''
+             and Integrated = 0) begin
+
+  declare @OnlineOrderCompanyID smallint
+
+  select @OnlineOrderCompanyID = ID
+  from tblOnlineOrderCompany
+  where upper(ltrim(rtrim(CompanyName))) = ''EPOS''
+
+  if (isnull(@OnlineOrderCompanyID, 0) > 0) begin
+
+    update tblOnlineOrderCompany
+    set Integrated = 1,
+        IntegrationCode = ''EPOS''
+    where ID = @OnlineOrderCompanyID
+  
+    update tblOnlineOrders
+    set OnlineOrderCompanyID = @OnlineOrderCompanyID
+    where OnlineOrderCompanyID = 0
+
+    update tblOnlineOrderDetail
+    set OnlineOrderCompanyID = @OnlineOrderCompanyID
+    where OnlineOrderCompanyID = 0
+
+  end
+
+end'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblTableDineInSelfOrderCode]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblTableDineInSelfOrderCode](
+ 	[TableID] [smallint] NOT NULL,
+	[HashSalt] [varchar](1000) NOT NULL,
+	[DineInSelfOrderCode] [varchar](1000) NOT NULL,
+	[ExpiryDateTime] [smalldatetime] NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblTableDineInSelfOrderCode]  WITH CHECK ADD  CONSTRAINT [FK_tblTableDineInSelfOrderCode_tblTable] FOREIGN KEY([TableID])
+REFERENCES [dbo].[tblTable] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblTableDineInSelfOrderCode] CHECK CONSTRAINT [FK_tblTableDineInSelfOrderCode_tblTable]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompany]
+  ADD
+    [CommissionCalculationType] [char](1) NOT NULL CONSTRAINT [DF_tblOnlineOrderCompany_CommissionCalculationType]  DEFAULT ('A')
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblNonIntegratedOnlineSelfPaymentURL]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblNonIntegratedOnlineSelfPaymentURL](
+	[SalesID] [int] NOT NULL,
+	[PersonIndex] [tinyint] NOT NULL,
+	[SelfPaymentURL] [varchar](4000) NOT NULL,
+ CONSTRAINT [PK_tblNonIntegratedOnlineSelfPaymentURL] PRIMARY KEY CLUSTERED 
+(
+	[SalesID] ASC,
+	[PersonIndex] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblNonIntegratedOnlineSelfPaymentURL]  WITH CHECK ADD  CONSTRAINT [FK_tblNonIntegratedOnlineSelfPaymentURL_tblSales] FOREIGN KEY([SalesID])
+REFERENCES [dbo].[tblSales] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblNonIntegratedOnlineSelfPaymentURL] CHECK CONSTRAINT [FK_tblNonIntegratedOnlineSelfPaymentURL_tblSales]
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders]
+  ADD
+    [DineInOrder] [bit] NOT NULL CONSTRAINT [DF_tblSalesOfOnlineOrders_DineInOrder]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders]
+  ADD
+    [ReservedTipAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblSalesOfOnlineOrders_ReservedTipAmt]  DEFAULT ((0))
+GO
+
+ALTER TABLE [dbo].[tblSalesOfOnlineOrders]
+  ADD
+    [DeliveryChargeAmt] [smallmoney] NOT NULL CONSTRAINT [DF_tblSalesOfOnlineOrders_DeliveryChargeAmt]  DEFAULT ((0))
+GO
+
+
+ALTER TABLE [dbo].[tblOnlineOrders] DROP CONSTRAINT [DF_tblOnlineOrders_AltOrderID]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrders] ALTER COLUMN [AltOrderID] [varchar](20) NOT NULL
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrders] ADD  CONSTRAINT [DF_tblOnlineOrders_AltOrderID]  DEFAULT ('') FOR [AltOrderID]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[rpt_online_order_sales_summary]') AND type in (N'U'))
+CREATE TABLE [dbo].[rpt_online_order_sales_summary](
+  [StoreID] [int] NOT NULL CONSTRAINT [DF_rpt_online_order_sales_summary_StoreID]  DEFAULT ((0)),
+  [UpdatedDateTime] [smalldatetime] NOT NULL,
+  [SaleDate] [smalldatetime] NOT NULL,
+  [OnlineOrderCompanyID] [smallint] NULL,
+  [CompanyName] [varchar](50) NULL,
+  [Integrated] [bit] NULL,
+  [TransType] [tinyint] NULL,
+  [TransTypeDescription] [varchar](20) NULL,
+  [TransCount] [int] NULL,
+  [SubTotalAmt] [money] NULL,
+  [DSCAmt] [money] NULL,
+  [Tax1Amt] [money] NULL,
+  [Tax2Amt] [money] NULL,
+  [Tax3Amt] [money] NULL,
+  [TotalAmt] [money] NULL,
+  [GuestCount] [int] NULL,
+  [PaymentTypeID] [tinyint] NULL,
+  [PaymentType] [varchar](20) NULL,
+  [PaymentCount] [int] NULL,
+  [PaidAmount] [money] NULL,
+  [TipAmount] [money] NULL,
+  [CommissionSubTotal] [money] NULL,
+  [CommissionTax1] [money] NULL,
+  [CommissionTax2] [money] NULL,
+  [CommissionTax3] [money] NULL,
+  [CommissionTotal] [money] NULL,
+  [Tax1Rate] [decimal](5, 4) NULL,
+  [Tax2Rate] [decimal](5, 4) NULL,
+  [Tax3Rate] [decimal](5, 4) NULL  
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[rpt_online_order_sales_summary_temp]') AND type in (N'U'))
+CREATE TABLE [dbo].[rpt_online_order_sales_summary_temp](
+  [OnlineOrderCompanyID] [smallint] NULL,
+  [CompanyName] [varchar](50) NULL,
+  [Integrated] [bit] NULL,
+  [TransType] [tinyint] NULL,
+  [TransTypeDescription] [varchar](20) NULL,
+  [TransCount] [int] NULL,
+  [SubTotalAmt] [money] NULL,
+  [DSCAmt] [money] NULL,
+  [Tax1Amt] [money] NULL,
+  [Tax2Amt] [money] NULL,
+  [Tax3Amt] [money] NULL,
+  [TotalAmt] [money] NULL,
+  [GuestCount] [int] NULL,
+  [PaymentTypeID] [tinyint] NULL,
+  [PaymentType] [varchar](20) NULL,
+  [PaymentCount] [int] NULL,
+  [PaidAmount] [money] NULL,
+  [TipAmount] [money] NULL,
+  [CommissionSubTotal] [money] NULL,
+  [CommissionTax1] [money] NULL,
+  [CommissionTax2] [money] NULL,
+  [CommissionTax3] [money] NULL,
+  [CommissionTotal] [money] NULL,
+  [Tax1Rate] [decimal](5, 4) NULL,
+  [Tax2Rate] [decimal](5, 4) NULL,
+  [Tax3Rate] [decimal](5, 4) NULL  
+) ON [PRIMARY]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblKitchenDisplayItems]') AND type in (N'U'))
+CREATE TABLE [dbo].[tblKitchenDisplayItems](
+	[StationID] [smallint] NOT NULL,
+	[ItemID] [smallint] NOT NULL,
+ CONSTRAINT [PK_tblKitchenDisplayItems] PRIMARY KEY CLUSTERED 
+(
+	[StationID] ASC,
+	[ItemID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPayment] ALTER COLUMN [CardReceipt] [nvarchar](4000) NULL
+GO
+
+ALTER TABLE [dbo].[tblPreAuthorizedCardTrans] ALTER COLUMN [CardReceipt] [nvarchar](4000) NULL
+GO
+
+ALTER TABLE [dbo].[tblCardReceiptTemplate] ALTER COLUMN [CardReceipt] [nvarchar](4000) NULL
+GO
+
+ALTER TABLE [dbo].[tblCardReceiptTemplate] ALTER COLUMN [CardReceiptEmbedded] [nvarchar](4000) NULL
+GO
+
+ALTER TABLE [dbo].[tblSalesDetail] 
+  ADD    
+    [SequenceNo] [smallint] NULL
+GO
+
+CREATE NONCLUSTERED INDEX [idx_OnlineOrdersSalesID] ON [dbo].[tblOnlineOrders]
+(
+	[SalesID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblOnlineOrderCompany]
+  ADD
+    [ItemInfoSyncAPIEndpointURL] [varchar](1000) NULL CONSTRAINT [DF_tblOnlineOrderCompany_ItemInfoSyncAPIEndpointURL]  DEFAULT ('')
+GO
+
+ALTER TABLE [dbo].[rpt_online_order_sales_summary]
+  ADD
+    [PaymentLocation] [varchar](20) NOT NULL CONSTRAINT [DF_rpt_online_order_sales_summary_PaymentLocation]  DEFAULT ((''))
+GO
+
+ALTER TABLE [dbo].[rpt_online_order_sales_summary_temp]
+  ADD
+    [PaymentLocation] [varchar](20) NOT NULL CONSTRAINT [DF_rpt_online_order_sales_summary_temp_PaymentLocation]  DEFAULT ((''))
+GO
