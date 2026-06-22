@@ -1,0 +1,19 @@
+# Next.js build and dependencies
+webapp/node_modules/
+webapp/.next/
+webapp/out/
+webapp/build/
+webapp/db_config.json
+
+# Local env files
+webapp/.env*.local
+
+# Logs
+*.log
+webapp/npm-debug.log*
+webapp/yarn-debug.log*
+webapp/yarn-error.log*
+
+# System Files
+.DS_Store
+Thumbs.db:Zone.Identifier
