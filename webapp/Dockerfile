@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install dependencies first (leverages Docker cache)
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 # Copy source code and build the app
 COPY . .
