@@ -10,7 +10,8 @@ export function getDbConfig() {
     database: 'TPPro',
     user: 'finalsolution',
     password: 'gmldnjs',
-    port: 1433,
+    port: 2345,
+    serverId: 64,
     trustServerCertificate: true,
   };
 
