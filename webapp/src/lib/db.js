@@ -2,7 +2,8 @@ import sql from 'mssql';
 import fs from 'fs';
 import path from 'path';
 
-const CONFIG_PATH = path.join(process.cwd(), 'db_config.json');
+const CONFIG_DIR = process.env.CONFIG_DIR || process.cwd();
+const CONFIG_PATH = path.join(CONFIG_DIR, 'db_config.json');
 
 export function getDbConfig() {
   const defaults = {
